@@ -1,0 +1,5 @@
+analyze_ai_content_marketing_audit.factor.add:
+  route_name: analyze_ai_content_marketing_audit.factor.add
+  title: 'Add factor'
+  appears_on:
+    - analyze_ai_content_marketing_audit.settings

@@ -1,0 +1,13 @@
+analyze_ai_content_marketing_audit.settings:
+  title: 'AI Content Marketing Audit'
+  route_name: analyze_ai_content_marketing_audit.settings
+  description: 'Configure AI-powered content marketing audit factors and settings.'
+  parent: ai.admin_settings
+  weight: 3
+
+analyze_ai_content_marketing_audit.reports:
+  title: 'AI Content Marketing Audit Reports'
+  route_name: view.content_marketing_audit_scores.page_1
+  description: 'View AI content marketing audit analysis results and insights.'
+  parent: system.admin_reports
+  weight: -1

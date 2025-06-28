@@ -1,0 +1,250 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for analyze_ai_content_marketing_audit module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function analyze_ai_content_marketing_audit_schema() {
+  $schema = [];
+
+  // Table for content marketing audit factors (like sentiment types).
+  $schema['analyze_ai_content_marketing_audit_factors'] = [
+    'description' => 'Stores content marketing audit factors for AI analysis.',
+    'fields' => [
+      'id' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => 'Primary key: unique factor identifier.',
+      ],
+      'label' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => 'Human-readable factor label.',
+      ],
+      'description' => [
+        'type' => 'text',
+        'not null' => FALSE,
+        'description' => 'Factor description.',
+      ],
+      'type' => [
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => 'quantitative',
+        'description' => 'Factor type: quantitative or qualitative.',
+      ],
+      'options' => [
+        'type' => 'text',
+        'not null' => FALSE,
+        'description' => 'JSON array of discrete options for qualitative factors.',
+      ],
+      'weight' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Factor weight for ordering.',
+      ],
+      'status' => [
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 1,
+        'description' => 'Factor status (1 = enabled, 0 = disabled).',
+      ],
+    ],
+    'primary key' => ['id'],
+    'indexes' => [
+      'weight' => ['weight'],
+      'status' => ['status'],
+      'type' => ['type'],
+      'type_status' => ['type', 'status'],
+    ],
+  ];
+
+  // Table for content marketing audit analysis results.
+  $schema['analyze_ai_content_marketing_audit_results'] = [
+    'description' => 'Stores AI content marketing audit analysis results.',
+    'fields' => [
+      'id' => [
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary key: unique analysis result ID.',
+      ],
+      'entity_type' => [
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'description' => 'The entity type that was analyzed.',
+      ],
+      'entity_id' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'The entity ID that was analyzed.',
+      ],
+      'entity_revision_id' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'description' => 'The entity revision ID that was analyzed.',
+      ],
+      'langcode' => [
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => TRUE,
+        'description' => 'The language code of the analyzed content.',
+      ],
+      'factor_id' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => 'The factor that was analyzed.',
+      ],
+      'score' => [
+        'type' => 'float',
+        'not null' => TRUE,
+        'description' => 'The analysis score (-1.0 to 1.0).',
+      ],
+      'content_hash' => [
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'description' => 'SHA256 hash of the analyzed content.',
+      ],
+      'config_hash' => [
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'description' => 'MD5 hash of the analysis configuration.',
+      ],
+      'analyzed_timestamp' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'description' => 'Unix timestamp when analysis was performed.',
+      ],
+    ],
+    'primary key' => ['id'],
+    'indexes' => [
+      'entity' => ['entity_type', 'entity_id'],
+      'factor' => ['factor_id'],
+      'content_hash' => ['content_hash'],
+      'config_hash' => ['config_hash'],
+      'analyzed_timestamp' => ['analyzed_timestamp'],
+    ],
+    'foreign keys' => [
+      'factor' => [
+        'table' => 'analyze_ai_content_marketing_audit_factors',
+        'columns' => ['factor_id' => 'id'],
+      ],
+    ],
+  ];
+
+  return $schema;
+}
+
+/**
+ * Implements hook_install().
+ */
+function analyze_ai_content_marketing_audit_install() {
+  // Create tables from schema.
+  $schema = analyze_ai_content_marketing_audit_schema();
+  $database = \Drupal::database();
+  foreach ($schema as $table_name => $table_spec) {
+    if (!$database->schema()->tableExists($table_name)) {
+      $database->schema()->createTable($table_name, $table_spec);
+    }
+  }
+  
+  // Insert default content marketing audit factors.
+  $factors = [
+    // Quantitative factors (scored -1.0 to 1.0)
+    'usability' => [
+      'label' => 'Usability',
+      'description' => 'How easy is the content to understand and act upon for the target audience?',
+      'type' => 'quantitative',
+      'weight' => 0,
+    ],
+    'knowledge_level' => [
+      'label' => 'Knowledge Level',
+      'description' => 'How well does the content demonstrate expertise and authority on the topic?',
+      'type' => 'quantitative',
+      'weight' => 1,
+    ],
+    'actionability' => [
+      'label' => 'Actionability',
+      'description' => 'How well does the content provide clear next steps or actionable insights?',
+      'type' => 'quantitative',
+      'weight' => 2,
+    ],
+    'accuracy' => [
+      'label' => 'Accuracy',
+      'description' => 'How factually correct and up-to-date is the content?',
+      'type' => 'quantitative',
+      'weight' => 3,
+    ],
+    'business_value' => [
+      'label' => 'Business Value',
+      'description' => 'How well does the content support business goals and provide value to stakeholders?',
+      'type' => 'quantitative',
+      'weight' => 4,
+    ],
+    'messaging' => [
+      'label' => 'Messaging',
+      'description' => 'How clear, compelling, and consistent is the messaging?',
+      'type' => 'quantitative',
+      'weight' => 5,
+    ],
+    'brand_voice_fit' => [
+      'label' => 'Brand Voice Fit',
+      'description' => 'How well does the content align with the brand voice and tone guidelines?',
+      'type' => 'quantitative',
+      'weight' => 6,
+    ],
+    // Qualitative factors (categorical classification)
+    'funnel_stage' => [
+      'label' => 'Funnel Stage',
+      'description' => 'Which stage of the marketing funnel does this content primarily target?',
+      'type' => 'qualitative',
+      'options' => ['Awareness', 'Consideration', 'Decision', 'Retention'],
+      'weight' => 100,
+    ],
+  ];
+
+  $database = \Drupal::database();
+  foreach ($factors as $id => $factor) {
+    $database->insert('analyze_ai_content_marketing_audit_factors')
+      ->fields([
+        'id' => $id,
+        'label' => $factor['label'],
+        'description' => $factor['description'],
+        'type' => $factor['type'],
+        'options' => isset($factor['options']) ? json_encode($factor['options']) : NULL,
+        'weight' => $factor['weight'],
+        'status' => 1,
+      ])
+      ->execute();
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function analyze_ai_content_marketing_audit_uninstall() {
+  // Clean up any remaining data if tables exist.
+  $database = \Drupal::database();
+  $schema = $database->schema();
+  
+  if ($schema->tableExists('analyze_ai_content_marketing_audit_factors')) {
+    $database->delete('analyze_ai_content_marketing_audit_factors')->execute();
+  }
+  
+  if ($schema->tableExists('analyze_ai_content_marketing_audit_results')) {
+    $database->delete('analyze_ai_content_marketing_audit_results')->execute();
+  }
+}

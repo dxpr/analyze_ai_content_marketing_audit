@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * @file
+ * Analyze AI Content Marketing Audit module for AI-powered content analysis.
+ */
+
+/**
+ * Implements hook_help().
+ */
+function analyze_ai_content_marketing_audit_help($route_name, $route_match) {
+  switch ($route_name) {
+    case 'help.page.analyze_ai_content_marketing_audit':
+      return '<p>' . t('The Analyze AI Content Marketing Audit module provides AI-powered analysis of content across multiple marketing factors including usability, knowledge level, actionability, accuracy, business value, messaging, and brand voice fit.') . '</p>';
+  }
+}

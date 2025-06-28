@@ -1,0 +1,11 @@
+analyze_ai_content_marketing_audit.reports.scores:
+  route_name: view.content_marketing_audit_scores.page_1
+  title: 'Scores'
+  base_route: view.content_marketing_audit_scores.page_1
+  weight: 0
+
+analyze_ai_content_marketing_audit.reports.classifications:
+  route_name: view.content_marketing_audit_classifications.page_1
+  title: 'Classifications'
+  base_route: view.content_marketing_audit_scores.page_1
+  weight: 10

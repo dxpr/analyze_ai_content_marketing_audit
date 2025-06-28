@@ -1,0 +1,27 @@
+# Configuration schema for Analyze AI Content Marketing Audit module.
+
+analyze_ai_content_marketing_audit.settings:
+  type: config_object
+  label: 'Content Marketing Audit settings'
+  mapping:
+    factors:
+      type: sequence
+      label: 'Content marketing audit factors'
+      sequence:
+        type: mapping
+        mapping:
+          id:
+            type: string
+            label: 'Factor ID'
+          label:
+            type: label
+            label: 'Factor label'
+          description:
+            type: text
+            label: 'Factor description'
+          weight:
+            type: integer
+            label: 'Factor weight'
+          status:
+            type: boolean
+            label: 'Factor status'

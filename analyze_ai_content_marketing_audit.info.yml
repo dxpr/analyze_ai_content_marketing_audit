@@ -1,0 +1,10 @@
+name: 'Analyze AI Content Marketing Audit'
+type: module
+description: 'AI-powered content marketing audit analyzing usability, knowledge level, actionability, accuracy, business value, messaging, and brand voice fit.'
+package: Analyze
+core_version_requirement: ^10.2 || ^11
+dependencies:
+  - drupal:views
+  - analyze:analyze
+  - ai:ai
+configure: analyze_ai_content_marketing_audit.settings
