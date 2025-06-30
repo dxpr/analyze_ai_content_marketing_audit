@@ -4,7 +4,8 @@
       "Bash(docker compose:*)",
       "Bash(chmod:*)",
       "Bash(ls:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ],
     "deny": []
   }
