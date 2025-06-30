@@ -172,7 +172,7 @@ final class AIContentMarketingAuditAnalyzer extends AnalyzePluginBase {
     // append the settings link.
     if ($message === 'No chat AI provider is configured for content marketing audit analysis.' && $this->currentUser->hasPermission('administer analyze settings')) {
       $link = Link::createFromRoute($this->t('Configure AI provider'), 'ai.settings_form');
-      $message = $this->t('No chat AI provider is configured for content marketing audit analysis. @link', ['@link' => $link->toString()]);
+      $message = $this->t('No chat AI provider is configured for content marketing audit analysis. @link to set up AI services for marketing analysis.', ['@link' => $link->toString()]);
     }
 
     return [
@@ -197,12 +197,14 @@ final class AIContentMarketingAuditAnalyzer extends AnalyzePluginBase {
     $bundle = $entity->bundle();
 
     if (!isset($status[$entity_type][$bundle][$this->getPluginId()])) {
-      return $this->createStatusTable('Content marketing audit analysis is not enabled for this content type.');
+      $settings_link = Link::createFromRoute($this->t('Enable content marketing audit'), 'analyze.analyze_settings')->toString();
+      return $this->createStatusTable($this->t('Content marketing audit analysis is not enabled for this content type. @link to configure content types.', ['@link' => $settings_link]));
     }
 
     $enabled_factors = $this->getEnabledFactors($entity->getEntityTypeId(), $entity->bundle());
     if (empty($enabled_factors)) {
-      return $this->createStatusTable('No content marketing audit factors are currently enabled.');
+      $factors_link = Link::createFromRoute($this->t('Configure marketing factors'), 'analyze_ai_content_marketing_audit.settings')->toString();
+      return $this->createStatusTable($this->t('No content marketing audit factors are currently enabled. @link to select factors to analyze.', ['@link' => $factors_link]));
     }
 
     // Try to get cached scores first.
@@ -257,10 +259,11 @@ final class AIContentMarketingAuditAnalyzer extends AnalyzePluginBase {
     // If no scores available but everything is configured correctly,
     // show a helpful message.
     if (!empty($content = $this->getHtml($entity))) {
-      return $this->createStatusTable('No chat AI provider is configured for content marketing audit analysis.');
+      $ai_link = Link::createFromRoute($this->t('Configure AI provider'), 'ai.settings_form')->toString();
+      return $this->createStatusTable($this->t('No chat AI provider is configured for content marketing audit analysis. @link to set up AI services.', ['@link' => $ai_link]));
     }
 
-    return $this->createStatusTable('No content available for analysis.');
+    return $this->createStatusTable($this->t('This content has no text available for marketing analysis. Add content such as body text, fields, or descriptions to enable analysis.'));
   }
 
   /**
@@ -273,12 +276,14 @@ final class AIContentMarketingAuditAnalyzer extends AnalyzePluginBase {
     $bundle = $entity->bundle();
 
     if (!isset($status[$entity_type][$bundle][$this->getPluginId()])) {
-      return $this->createStatusTable('Content marketing audit analysis is not enabled for this content type.');
+      $settings_link = Link::createFromRoute($this->t('Enable content marketing audit'), 'analyze.analyze_settings')->toString();
+      return $this->createStatusTable($this->t('Content marketing audit analysis is not enabled for this content type. @link to configure content types.', ['@link' => $settings_link]));
     }
 
     $enabled_factors = $this->getEnabledFactors($entity->getEntityTypeId(), $entity->bundle());
     if (empty($enabled_factors)) {
-      return $this->createStatusTable('No content marketing audit factors are currently enabled.');
+      $factors_link = Link::createFromRoute($this->t('Configure marketing factors'), 'analyze_ai_content_marketing_audit.settings')->toString();
+      return $this->createStatusTable($this->t('No content marketing audit factors are currently enabled. @link to select factors to analyze.', ['@link' => $factors_link]));
     }
 
     // Try to get cached scores first.
@@ -294,12 +299,13 @@ final class AIContentMarketingAuditAnalyzer extends AnalyzePluginBase {
 
     // If no scores available but content exists, show the table message.
     if (empty($scores) && !empty($this->getHtml($entity))) {
-      return $this->createStatusTable('No chat AI provider is configured for content marketing audit analysis.');
+      $ai_link = Link::createFromRoute($this->t('Configure AI provider'), 'ai.settings_form')->toString();
+      return $this->createStatusTable($this->t('No chat AI provider is configured for content marketing audit analysis. @link to set up AI services.', ['@link' => $ai_link]));
     }
 
     // If no content available, show that message.
     if (empty($this->getHtml($entity))) {
-      return $this->createStatusTable('No content available for analysis.');
+      return $this->createStatusTable($this->t('This content has no text available for marketing analysis. Add content such as body text, fields, or descriptions to enable analysis.'));
     }
 
     // Only build the gauge display if we have scores.

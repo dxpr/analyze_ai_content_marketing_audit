@@ -48,8 +48,9 @@ final class ContentMarketingAuditBatchForm extends FormBase {
     if (empty($available_types)) {
       $configure_url = Url::fromRoute('analyze.analyze_settings');
       $form['no_bundles'] = [
-        '#markup' => $this->t('<p>No content types have content marketing audit analysis enabled. Please <a href="@url">configure the Analyze module</a> first.</p>', [
+        '#markup' => $this->t('<p>No content types have content marketing audit analysis enabled. <a href="@url">Configure content types</a> to enable marketing audit analysis, or <a href="@settings_url">configure marketing factors</a> to set up analysis criteria.</p>', [
           '@url' => $configure_url->toString(),
+          '@settings_url' => Url::fromRoute('analyze_ai_content_marketing_audit.settings')->toString(),
         ]),
       ];
       return $form;
