@@ -3,6 +3,6 @@ services:
     class: Drupal\analyze_ai_content_marketing_audit\Service\ContentMarketingAuditStorageService
     arguments: ['@database', '@entity_type.manager']
 
-  analyze_ai_content_marketing_audit.batch:
+  analyze_ai_content_marketing_audit.batch_service:
     class: Drupal\analyze_ai_content_marketing_audit\Service\ContentMarketingAuditBatchService
     arguments: ['@entity_type.manager', '@analyze_ai_content_marketing_audit.storage']

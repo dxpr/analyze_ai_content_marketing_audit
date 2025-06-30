@@ -24,7 +24,7 @@ final class ContentMarketingAuditBatchForm extends FormBase {
    */
   public static function create(ContainerInterface $container): static {
     return new static(
-      $container->get('analyze_ai_content_marketing_audit.batch'),
+      $container->get('analyze_ai_content_marketing_audit.batch_service'),
     );
   }
 

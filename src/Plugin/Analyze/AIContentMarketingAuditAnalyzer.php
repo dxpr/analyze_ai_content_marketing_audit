@@ -21,12 +21,12 @@ use Drupal\analyze_ai_content_marketing_audit\Service\ContentMarketingAuditStora
  * A content marketing audit analyzer that uses AI to analyze content factors.
  *
  * @Analyze(
- *   id = "content_marketing_audit_analyzer",
+ *   id = "analyze_ai_content_marketing_audit_analyzer",
  *   label = @Translation("AI Content Marketing Audit"),
  *   description = @Translation("Analyzes content marketing factors using AI.")
  * )
  */
-final class ContentMarketingAuditAnalyzer extends AnalyzePluginBase {
+final class AIContentMarketingAuditAnalyzer extends AnalyzePluginBase {
 
   /**
    * The AI provider manager.

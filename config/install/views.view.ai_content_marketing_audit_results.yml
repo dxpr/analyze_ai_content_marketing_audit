@@ -11,7 +11,7 @@ dependencies:
     - views_color_scales
 _core:
   default_config_hash: Xyn6XU_CX-QuJeKPU6gh_S0liJGiqYcfKJO0pbER7jE
-id: content_marketing_audit_results
+id: ai_content_marketing_audit_results
 label: 'AI Content Marketing Audit Analysis'
 module: views
 description: 'Display AI content marketing audit analysis results.'
