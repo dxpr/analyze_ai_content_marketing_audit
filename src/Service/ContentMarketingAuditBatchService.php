@@ -31,20 +31,21 @@ final class ContentMarketingAuditBatchService {
    * @param int $limit
    *   Maximum number of entities to return.
    *
-   * @return array
+   * @return array<int, array{entity_type: string, entity_id: int|string, bundle: string}>
    *   Array of entity info arrays.
    */
   public function getEntitiesForAnalysis(array $entity_bundles, bool $force_refresh = FALSE, int $limit = 0): array {
     $entities = [];
-    
+
     foreach ($entity_bundles as $entity_bundle) {
       [$entity_type_id, $bundle] = explode(':', $entity_bundle);
-      
+
       $storage = $this->entityTypeManager->getStorage($entity_type_id);
       $query = $storage->getQuery()
         ->accessCheck(TRUE)
         ->condition('type', $bundle)
-        ->condition('status', 1); // Only published content
+      // Only published content.
+        ->condition('status', 1);
 
       if (!$force_refresh) {
         // Exclude entities that already have recent analysis.
@@ -53,7 +54,7 @@ final class ContentMarketingAuditBatchService {
           $query->condition($storage->getEntityType()->getKey('id'), $analyzed_ids, 'NOT IN');
         }
       }
-        
+
       if ($limit > 0) {
         $remaining = $limit - count($entities);
         if ($remaining <= 0) {
@@ -61,9 +62,9 @@ final class ContentMarketingAuditBatchService {
         }
         $query->range(0, $remaining);
       }
-      
+
       $ids = $query->execute();
-      
+
       foreach ($ids as $id) {
         $entities[] = [
           'entity_type' => $entity_type_id,
@@ -78,14 +79,23 @@ final class ContentMarketingAuditBatchService {
 
   /**
    * Gets IDs of entities that already have analysis.
+   *
+   * @param string $entity_type_id
+   *   The entity type ID.
+   * @param string $bundle
+   *   The bundle.
+   *
+   * @return array<int, int|string>
+   *   Array of entity IDs.
    */
   private function getAnalyzedEntityIds(string $entity_type_id, string $bundle): array {
     $connection = \Drupal::database();
-    
+
     $query = $connection->select('analyze_ai_content_marketing_audit_results', 'r')
       ->fields('r', ['entity_id'])
       ->condition('entity_type', $entity_type_id)
-      ->condition('analyzed_timestamp', strtotime('-7 days'), '>')  // Only recent analysis
+    // Only recent analysis.
+      ->condition('analyzed_timestamp', strtotime('-7 days'), '>')
       ->distinct();
 
     $ids = $query->execute()->fetchCol();
@@ -124,15 +134,16 @@ final class ContentMarketingAuditBatchService {
             // Delete existing scores to force fresh analysis.
             $this->storageService->deleteScores($entity);
           }
-          
+
           // Capture any output to prevent JSON corruption.
           ob_start();
           $analyzer->renderSummary($entity);
           ob_end_clean();
-          
+
           $context['results']['processed']++;
         }
-      } catch (\Exception $e) {
+      }
+      catch (\Exception $e) {
         $context['results']['errors'][] = $this->t('Error processing @type @id: @message', [
           '@type' => $entity_data['entity_type'],
           '@id' => $entity_data['entity_id'],

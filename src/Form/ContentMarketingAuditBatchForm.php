@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\analyze_ai_content_marketing_audit\Form;
 
+use Drupal\Core\Url;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\analyze_ai_content_marketing_audit\Service\ContentMarketingAuditBatchService;
@@ -18,25 +19,34 @@ final class ContentMarketingAuditBatchForm extends FormBase {
     private readonly ContentMarketingAuditBatchService $batchService,
   ) {}
 
+  /**
+   * {@inheritdoc}
+   */
   public static function create(ContainerInterface $container): static {
     return new static(
       $container->get('analyze_ai_content_marketing_audit.batch'),
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getFormId(): string {
     return 'analyze_ai_content_marketing_audit_batch';
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function buildForm(array $form, FormStateInterface $form_state): array {
     $form['description'] = [
       '#markup' => $this->t('<p>Analyze content for marketing audit factors. Results are cached to improve performance.</p>'),
     ];
 
     $available_types = $this->getAvailableEntityTypes();
-    
+
     if (empty($available_types)) {
-      $configure_url = \Drupal\Core\Url::fromRoute('analyze.analyze_settings');
+      $configure_url = Url::fromRoute('analyze.analyze_settings');
       $form['no_bundles'] = [
         '#markup' => $this->t('<p>No content types have content marketing audit analysis enabled. Please <a href="@url">configure the Analyze module</a> first.</p>', [
           '@url' => $configure_url->toString(),
@@ -79,16 +89,19 @@ final class ContentMarketingAuditBatchForm extends FormBase {
     return $form;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function submitForm(array &$form, FormStateInterface $form_state): void {
     $values = $form_state->getValues();
     $selected_types = array_filter($values['entity_types']);
-    
+
     $entities = $this->batchService->getEntitiesForAnalysis(
       $selected_types,
       (bool) $values['force_refresh'],
       (int) $values['limit']
     );
-    
+
     if (empty($entities)) {
       $this->messenger()->addWarning($this->t('No entities found for analysis.'));
       return;
@@ -112,6 +125,9 @@ final class ContentMarketingAuditBatchForm extends FormBase {
     batch_set($batch);
   }
 
+  /**
+   * Batch finished callback.
+   */
   public static function batchFinished(bool $success, array $results, array $operations): void {
     if ($success) {
       $processed = $results['processed'] ?? 0;
@@ -124,16 +140,20 @@ final class ContentMarketingAuditBatchForm extends FormBase {
           \Drupal::messenger()->addError($error);
         }
       }
-    } else {
+    }
+    else {
       \Drupal::messenger()->addError(t('Batch processing failed.'));
     }
   }
 
+  /**
+   * Get available entity types for analysis.
+   */
   private function getAvailableEntityTypes(): array {
     // Get entity types where content marketing audit analyzer is enabled.
     $config = \Drupal::config('analyze.settings');
     $status = $config->get('status') ?? [];
-    
+
     $options = [];
     foreach ($status as $entity_type_id => $bundles) {
       foreach ($bundles as $bundle => $analyzers) {

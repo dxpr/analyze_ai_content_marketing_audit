@@ -42,7 +42,7 @@ class ContentMarketingAuditScore extends FieldPluginBase {
   public function query() {
     // Add the table and field to the query.
     $this->ensureMyTable();
-    
+
     // Explicitly add both score and factor_id fields to the query.
     $this->additional_fields['score'] = 'score';
     $this->additional_fields['factor_id'] = 'factor_id';
@@ -127,7 +127,7 @@ class ContentMarketingAuditScore extends FieldPluginBase {
   public function render(ResultRow $values) {
     $score = $this->getValue($values, 'score');
     $factor_id = $this->getValue($values, 'factor_id');
-    
+
     if ($score === NULL || $factor_id === NULL) {
       return '';
     }
@@ -144,11 +144,12 @@ class ContentMarketingAuditScore extends FieldPluginBase {
 
     // Format the numeric value.
     $value = (float) $score;
-    
+
     if ($this->options['set_precision']) {
       $precision = (int) $this->options['precision'];
       $value = number_format($value, $precision, $this->options['decimal'], $this->options['separator']);
-    } else {
+    }
+    else {
       $value = number_format($value, 2, $this->options['decimal'], $this->options['separator']);
     }
 

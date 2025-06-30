@@ -19,16 +19,25 @@ final class AddFactorForm extends FormBase {
     private readonly ContentMarketingAuditStorageService $storageService,
   ) {}
 
+  /**
+   * {@inheritdoc}
+   */
   public static function create(ContainerInterface $container): static {
     return new static(
       $container->get('analyze_ai_content_marketing_audit.storage'),
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getFormId(): string {
     return 'analyze_ai_content_marketing_audit_add_factor';
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function buildForm(array $form, FormStateInterface $form_state): array {
     $form['id'] = [
       '#type' => 'machine_name',
@@ -116,9 +125,12 @@ final class AddFactorForm extends FormBase {
     return $form;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function validateForm(array &$form, FormStateInterface $form_state): void {
     $factor_id = $form_state->getValue('id');
-    
+
     if ($this->factorExists($factor_id)) {
       $form_state->setErrorByName('id', $this->t('A factor with this ID already exists.'));
     }
@@ -129,7 +141,8 @@ final class AddFactorForm extends FormBase {
       $options_text = trim($form_state->getValue('options', ''));
       if (empty($options_text)) {
         $form_state->setErrorByName('options', $this->t('Discrete options are required for qualitative factors.'));
-      } else {
+      }
+      else {
         $options = array_filter(array_map('trim', explode("\n", $options_text)));
         if (count($options) < 2) {
           $form_state->setErrorByName('options', $this->t('At least 2 discrete options are required for qualitative factors.'));
@@ -138,15 +151,18 @@ final class AddFactorForm extends FormBase {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function submitForm(array &$form, FormStateInterface $form_state): void {
     $values = $form_state->getValues();
-    
+
     // Process options for qualitative factors.
     $options = NULL;
     if ($values['type'] === 'qualitative' && !empty($values['options'])) {
       $options = array_filter(array_map('trim', explode("\n", $values['options'])));
     }
-    
+
     $this->storageService->saveFactor(
       $values['id'],
       $values['label'],

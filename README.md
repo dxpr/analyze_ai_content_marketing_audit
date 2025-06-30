@@ -339,4 +339,7 @@ Current maintainers:
 This project is sponsored by:
 - [Your Organization] - [Website]
 
-For support, feature requests, and bug reports, please use the project's issue queue.
+For support, feature requests, and bug reports, please use the project's issue 
+queue.
+
+<!-- Test comment for pre-commit hook -->

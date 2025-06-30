@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\analyze_ai_content_marketing_audit\Service;
 
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -65,7 +66,7 @@ final class ContentMarketingAuditStorageService {
     $content_hash = $this->generateContentHash($entity);
     $config_hash = $this->generateConfigHash();
 
-    // Delete existing records for this entity/factor/content/config combination.
+    // Delete existing records for this entity/factor/content/config combo.
     $this->database->delete('analyze_ai_content_marketing_audit_results')
       ->condition('entity_type', $entity->getEntityTypeId())
       ->condition('entity_id', $entity->id())
@@ -108,8 +109,8 @@ final class ContentMarketingAuditStorageService {
    * Invalidates cached scores when configuration changes.
    */
   public function invalidateConfigCache(): void {
-    // We don't need to do anything here since we check config hash on retrieval.
-    // Old cached results will simply not be found due to config hash mismatch.
+    // We check config hash on retrieval, so nothing needed here.
+    // Old cached results will not be found due to config hash mismatch.
   }
 
   /**
@@ -118,7 +119,7 @@ final class ContentMarketingAuditStorageService {
    * @param string|null $type
    *   Optional filter by factor type (quantitative or qualitative).
    *
-   * @return array
+   * @return array<string, mixed>
    *   Array of factor data keyed by factor ID.
    */
   public function getFactors(?string $type = NULL): array {
@@ -138,7 +139,7 @@ final class ContentMarketingAuditStorageService {
   /**
    * Gets quantitative factors only.
    *
-   * @return array
+   * @return array<string, mixed>
    *   Array of quantitative factor data keyed by factor ID.
    */
   public function getQuantitativeFactors(): array {
@@ -148,7 +149,7 @@ final class ContentMarketingAuditStorageService {
   /**
    * Gets qualitative factors only.
    *
-   * @return array
+   * @return array<string, mixed>
    *   Array of qualitative factor data keyed by factor ID.
    */
   public function getQualitativeFactors(): array {
@@ -161,7 +162,7 @@ final class ContentMarketingAuditStorageService {
    * @param string $factor_id
    *   The factor ID.
    *
-   * @return array
+   * @return array<string>
    *   Array of discrete options.
    */
   public function getFactorOptions(string $factor_id): array {
@@ -169,12 +170,12 @@ final class ContentMarketingAuditStorageService {
     if (!$factor || $factor['type'] !== 'qualitative') {
       return [];
     }
-    
+
     if (!empty($factor['options'])) {
       $decoded = json_decode($factor['options'], TRUE);
       return is_array($decoded) ? $decoded : [];
     }
-    
+
     return [];
   }
 
@@ -184,7 +185,7 @@ final class ContentMarketingAuditStorageService {
    * @param string $factor_id
    *   The factor ID.
    *
-   * @return array|null
+   * @return array<string, mixed>|null
    *   The factor data or NULL if not found.
    */
   public function getFactor(string $factor_id): ?array {
@@ -207,7 +208,7 @@ final class ContentMarketingAuditStorageService {
    *   The factor description.
    * @param string $type
    *   The factor type (quantitative or qualitative).
-   * @param array|null $options
+   * @param array<string>|null $options
    *   The discrete options for qualitative factors.
    * @param int $weight
    *   The factor weight.
@@ -216,7 +217,7 @@ final class ContentMarketingAuditStorageService {
    */
   public function saveFactor(string $factor_id, string $label, string $description, string $type, ?array $options, int $weight, int $status): void {
     $this->database->merge('analyze_ai_content_marketing_audit_factors')
-      ->key(['id' => $factor_id])
+      ->key('id', $factor_id)
       ->fields([
         'label' => $label,
         'description' => $description,
@@ -262,12 +263,14 @@ final class ContentMarketingAuditStorageService {
 
     try {
       $content = '';
-      if ($entity->hasField('title')) {
-        $content .= $entity->get('title')->value ?? '';
-      }
-      if ($entity->hasField('body')) {
-        $body = $entity->get('body')->value ?? '';
-        $content .= strip_tags($body);
+      if ($entity instanceof FieldableEntityInterface) {
+        if ($entity->hasField('title')) {
+          $content .= $entity->get('title')->value ?? '';
+        }
+        if ($entity->hasField('body')) {
+          $body = $entity->get('body')->value ?? '';
+          $content .= strip_tags($body);
+        }
       }
 
       return hash('sha256', $content . $entity->getEntityTypeId() . $entity->id() . $entity->language()->getId());

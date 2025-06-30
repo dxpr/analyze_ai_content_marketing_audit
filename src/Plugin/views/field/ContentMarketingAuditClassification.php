@@ -40,7 +40,7 @@ class ContentMarketingAuditClassification extends FieldPluginBase {
   public function query() {
     // Add the table and field to the query.
     $this->ensureMyTable();
-    
+
     // Explicitly add both score and factor_id fields to the query.
     $this->additional_fields['score'] = 'score';
     $this->additional_fields['factor_id'] = 'factor_id';
@@ -53,7 +53,7 @@ class ContentMarketingAuditClassification extends FieldPluginBase {
   public function render(ResultRow $values) {
     $score = $this->getValue($values, 'score');
     $factor_id = $this->getValue($values, 'factor_id');
-    
+
     if ($score === NULL || $factor_id === NULL) {
       return '';
     }
@@ -84,17 +84,17 @@ class ContentMarketingAuditClassification extends FieldPluginBase {
    */
   private function formatQualitativeScore(string $factor_id, float $score): string {
     $options = $this->storage->getFactorOptions($factor_id);
-    
+
     if (empty($options)) {
       return '';
     }
 
     $option_count = count($options);
-    
+
     // Convert from -1.0 to 1.0 range back to index.
     $index = round(($score + 1.0) / 2.0 * max(1, $option_count - 1));
     $index = max(0, min($option_count - 1, $index));
-    
+
     return $options[$index] ?? '';
   }
 

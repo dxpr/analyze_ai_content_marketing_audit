@@ -1,12 +1,18 @@
+uuid: cfbdb160-6930-4e90-90f0-4239aef1d7f1
 langcode: en
 status: true
 dependencies:
+  config:
+    - system.menu.admin
   module:
     - analyze_ai_content_marketing_audit
     - node
     - user
+    - views_color_scales
+_core:
+  default_config_hash: Xyn6XU_CX-QuJeKPU6gh_S0liJGiqYcfKJO0pbER7jE
 id: content_marketing_audit_results
-label: 'Content Marketing Audit Results'
+label: 'AI Content Marketing Audit Analysis'
 module: views
 description: 'Display AI content marketing audit analysis results.'
 tag: ''
@@ -14,111 +20,12 @@ base_table: analyze_ai_content_marketing_audit_results
 base_field: id
 display:
   default:
-    display_plugin: default
     id: default
     display_title: Default
+    display_plugin: default
     position: 0
     display_options:
-      access:
-        type: perm
-        options:
-          perm: 'view analyze results'
-      cache:
-        type: tag
-        options: {  }
-      query:
-        type: views_query
-        options:
-          disable_sql_rewrite: false
-          distinct: false
-          replica: false
-          query_comment: ''
-          query_tags: {  }
-      exposed_form:
-        type: basic
-        options:
-          submit_button: Search
-          reset_button: false
-          reset_button_label: Reset
-          exposed_sorts_label: 'Sort by'
-          expose_sort_order: true
-          sort_asc_label: Asc
-          sort_desc_label: Desc
-      pager:
-        type: mini
-        options:
-          items_per_page: 100
-          offset: 0
-          id: 0
-          total_pages: null
-          expose:
-            items_per_page: false
-            items_per_page_label: 'Items per page'
-            items_per_page_options: '5, 10, 25, 50'
-            items_per_page_options_all: false
-            items_per_page_options_all_label: '- All -'
-            offset: false
-            offset_label: Offset
-          tags:
-            previous: ‹‹
-            next: ››
-      style:
-        type: table
-        options:
-          grouping: {  }
-          row_class: ''
-          default_row_class: true
-          override: true
-          sticky: false
-          caption: ''
-          summary: ''
-          description: ''
-          columns:
-            title: title
-            factor_id: factor_id
-            analyzed_timestamp: analyzed_timestamp
-            type: type
-            score: score
-          info:
-            title:
-              sortable: true
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            factor_id:
-              sortable: true
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            analyzed_timestamp:
-              sortable: true
-              default_sort_order: desc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            type:
-              sortable: true
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            score:
-              sortable: true
-              default_sort_order: desc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-          default: analyzed_timestamp
-          empty_table: false
-      row:
-        type: fields
+      title: 'Content Marketing Audit Results'
       fields:
         title:
           id: title
@@ -127,6 +34,7 @@ display:
           relationship: entity_id
           group_type: group
           admin_label: ''
+          plugin_id: field
           label: Title
           exclude: false
           alter:
@@ -182,7 +90,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
         factor_id:
           id: factor_id
           table: analyze_ai_content_marketing_audit_results
@@ -190,6 +97,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: standard
           label: 'Factor Type'
           exclude: false
           alter:
@@ -244,7 +152,82 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: standard
+        score:
+          id: score
+          table: analyze_ai_content_marketing_audit_results
+          field: score
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: content_marketing_audit_score
+          label: 'Marketing Audit Score'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          set_precision: 0
+          precision: '0'
+          decimal: .
+          separator: ', '
+          format_plural: 0
+          format_plural_string: !!binary MQNAY291bnQ=
+          prefix: ''
+          suffix: ''
+          color_scale: 1
+          color_scale_min: '-1'
+          color_scale_max: '1'
+          color_scale_auto: 0
+          color_scale_min_color: '#FFB3B3'
+          color_scale_max_color: '#B3FFB3'
+          click_sort_column: value
+          type: content_marketing_audit_score
+          settings:
+            display_format: auto
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          field_api_classes: false
         analyzed_timestamp:
           id: analyzed_timestamp
           table: analyze_ai_content_marketing_audit_results
@@ -252,6 +235,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: date
           label: 'Last analyzed'
           exclude: false
           alter:
@@ -299,6 +283,15 @@ display:
             date_format: medium
             custom_date_format: ''
             timezone: ''
+            tooltip:
+              date_format: ''
+              custom_date_format: ''
+            time_diff:
+              enabled: false
+              future_format: '@interval hence'
+              past_format: '@interval ago'
+              granularity: 2
+              refresh: 60
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -309,7 +302,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: date
         type:
           id: type
           table: node_field_data
@@ -317,6 +309,7 @@ display:
           relationship: entity_id
           group_type: group
           admin_label: ''
+          plugin_id: field
           label: 'Content type'
           exclude: false
           alter:
@@ -372,70 +365,58 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
-        score:
-          id: score
+      pager:
+        type: mini
+        options:
+          offset: 0
+          pagination_heading_level: h4
+          items_per_page: 100
+          total_pages: null
+          id: 0
+          tags:
+            next: ››
+            previous: ‹‹
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+      exposed_form:
+        type: basic
+        options:
+          submit_button: Search
+          reset_button: false
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          expose_sort_order: true
+          sort_asc_label: Asc
+          sort_desc_label: Desc
+      access:
+        type: perm
+        options:
+          perm: 'view analyze results'
+      cache:
+        type: tag
+        options: {  }
+      empty: {  }
+      sorts:
+        analyzed_timestamp:
+          id: analyzed_timestamp
           table: analyze_ai_content_marketing_audit_results
-          field: score
+          field: analyzed_timestamp
           relationship: none
           group_type: group
           admin_label: ''
-          label: 'Marketing Audit Score'
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: true
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: value
-          type: content_marketing_audit_score
-          settings:
-            display_format: auto
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-          plugin_id: content_marketing_audit_score
+          plugin_id: date
+          order: DESC
+          expose:
+            label: ''
+          exposed: false
+          granularity: second
+      arguments: {  }
       filters:
         factor_id:
           id: factor_id
@@ -444,6 +425,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: string
           operator: in
           value: {  }
           group: 1
@@ -475,7 +457,6 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          plugin_id: string
         score:
           id: score
           table: analyze_ai_content_marketing_audit_results
@@ -483,6 +464,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: numeric
           operator: between
           value:
             min: ''
@@ -519,7 +501,6 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          plugin_id: numeric
         title:
           id: title
           table: node_field_data
@@ -527,6 +508,7 @@ display:
           relationship: entity_id
           group_type: group
           admin_label: ''
+          plugin_id: string
           operator: contains
           value: ''
           group: 1
@@ -558,24 +540,71 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          plugin_id: string
-      sorts:
-        analyzed_timestamp:
-          id: analyzed_timestamp
-          table: analyze_ai_content_marketing_audit_results
-          field: analyzed_timestamp
-          relationship: none
-          group_type: group
-          admin_label: ''
-          order: DESC
-          exposed: false
-          expose:
-            label: ''
-          granularity: second
-          plugin_id: date
-      header: {  }
-      footer: {  }
-      empty: {  }
+      style:
+        type: table
+        options:
+          grouping: {  }
+          row_class: ''
+          default_row_class: true
+          columns:
+            title: title
+            factor_id: factor_id
+            analyzed_timestamp: analyzed_timestamp
+            type: type
+            score: score
+          default: analyzed_timestamp
+          info:
+            title:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            factor_id:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            analyzed_timestamp:
+              sortable: true
+              default_sort_order: desc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            type:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            score:
+              sortable: true
+              default_sort_order: desc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+          override: true
+          sticky: false
+          summary: ''
+          empty_table: false
+          caption: ''
+          description: ''
+      row:
+        type: fields
+      query:
+        type: views_query
+        options:
+          query_comment: ''
+          disable_sql_rewrite: false
+          distinct: false
+          replica: false
+          query_tags: {  }
       relationships:
         entity_id:
           id: entity_id
@@ -584,9 +613,10 @@ display:
           relationship: none
           group_type: group
           admin_label: Content
-          required: true
           plugin_id: standard
-      arguments: {  }
+          required: true
+      header: {  }
+      footer: {  }
       display_extenders: {  }
     cache_metadata:
       max-age: -1
@@ -598,22 +628,22 @@ display:
         - user.permissions
       tags: {  }
   page_1:
-    display_plugin: page
     id: page_1
     display_title: Page
+    display_plugin: page
     position: 1
     display_options:
       display_extenders: {  }
       path: admin/reports/content-marketing-audit
       menu:
-        type: tab
-        title: 'Content Marketing Audit'
+        type: normal
+        title: 'AI Content Marketing Audit'
         description: 'View AI content marketing audit analysis results.'
+        weight: -1
         expanded: false
-        parent: ''
-        weight: 0
-        context: '0'
         menu_name: admin
+        parent: system.admin_reports
+        context: '0'
     cache_metadata:
       max-age: -1
       contexts:

@@ -19,19 +19,28 @@ final class EditFactorForm extends FormBase {
     private readonly ContentMarketingAuditStorageService $storageService,
   ) {}
 
+  /**
+   * {@inheritdoc}
+   */
   public static function create(ContainerInterface $container): static {
     return new static(
       $container->get('analyze_ai_content_marketing_audit.storage'),
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getFormId(): string {
     return 'analyze_ai_content_marketing_audit_edit_factor';
   }
 
-  public function buildForm(array $form, FormStateInterface $form_state, string $factor_id = NULL): array {
+  /**
+   * {@inheritdoc}
+   */
+  public function buildForm(array $form, FormStateInterface $form_state, ?string $factor_id = NULL): array {
     $factor = $this->storageService->getFactor($factor_id);
-    
+
     if (!$factor) {
       $this->messenger()->addError($this->t('Content marketing audit factor not found.'));
       $form_state->setRedirectUrl(Url::fromRoute('analyze_ai_content_marketing_audit.settings'));
@@ -137,6 +146,9 @@ final class EditFactorForm extends FormBase {
     return $form;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function validateForm(array &$form, FormStateInterface $form_state): void {
     // Validate options for qualitative factors.
     $type = $form_state->getValue('type');
@@ -144,7 +156,8 @@ final class EditFactorForm extends FormBase {
       $options_text = trim($form_state->getValue('options', ''));
       if (empty($options_text)) {
         $form_state->setErrorByName('options', $this->t('Discrete options are required for qualitative factors.'));
-      } else {
+      }
+      else {
         $options = array_filter(array_map('trim', explode("\n", $options_text)));
         if (count($options) < 2) {
           $form_state->setErrorByName('options', $this->t('At least 2 discrete options are required for qualitative factors.'));
@@ -153,15 +166,18 @@ final class EditFactorForm extends FormBase {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function submitForm(array &$form, FormStateInterface $form_state): void {
     $values = $form_state->getValues();
-    
+
     // Process options for qualitative factors.
     $options = NULL;
     if ($values['type'] === 'qualitative' && !empty($values['options'])) {
       $options = array_filter(array_map('trim', explode("\n", $values['options'])));
     }
-    
+
     $this->storageService->saveFactor(
       $values['factor_id'],
       $values['label'],

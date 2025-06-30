@@ -3,7 +3,6 @@
 namespace Drupal\analyze_ai_content_marketing_audit\Plugin\Analyze;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Url;
 use Drupal\analyze\AnalyzePluginBase;
 use Drupal\ai\AiProviderPluginManager;
 use Drupal\ai\OperationType\Chat\ChatInput;
@@ -151,7 +150,7 @@ final class ContentMarketingAuditAnalyzer extends AnalyzePluginBase {
    */
   private function getEnabledFactors(string $entity_type_id, string $bundle): array {
     $factors = $this->storage->getFactors();
-    
+
     $enabled = array_filter($factors, function ($factor) {
       return $factor['status'] == 1;
     });
@@ -165,7 +164,7 @@ final class ContentMarketingAuditAnalyzer extends AnalyzePluginBase {
    * @param string $message
    *   The status message to display.
    *
-   * @return array
+   * @return array<string, mixed>
    *   The render array for the status table.
    */
   private function createStatusTable(string $message): array {
@@ -208,7 +207,7 @@ final class ContentMarketingAuditAnalyzer extends AnalyzePluginBase {
 
     // Try to get cached scores first.
     $scores = $this->getStoredScores($entity);
-    
+
     // If no cached scores, perform analysis.
     if (empty($scores)) {
       $scores = $this->analyzeContentMarketingAudit($entity);
@@ -223,7 +222,7 @@ final class ContentMarketingAuditAnalyzer extends AnalyzePluginBase {
 
     if (isset($scores[$id])) {
       $score = $scores[$id];
-      
+
       if ($factor['type'] === 'qualitative') {
         // For qualitative factors, show a simple table with the classification.
         $classification = $this->convertNumericToQualitative($id, $score);
@@ -237,7 +236,8 @@ final class ContentMarketingAuditAnalyzer extends AnalyzePluginBase {
             ],
           ],
         ];
-      } else {
+      }
+      else {
         // For quantitative factors, show the gauge.
         $gauge_value = ($score + 1) / 2;
         return [
@@ -283,7 +283,7 @@ final class ContentMarketingAuditAnalyzer extends AnalyzePluginBase {
 
     // Try to get cached scores first.
     $scores = $this->getStoredScores($entity);
-    
+
     // If no cached scores, perform analysis.
     if (empty($scores)) {
       $scores = $this->analyzeContentMarketingAudit($entity);
@@ -316,14 +316,14 @@ final class ContentMarketingAuditAnalyzer extends AnalyzePluginBase {
       '#value' => $this->t('Content Marketing Audit Analysis'),
     ];
 
-    // Separate qualitative and quantitative factors
+    // Separate qualitative and quantitative factors.
     $qualitative_rows = [];
     $quantitative_factors = [];
-    
+
     foreach ($enabled_factors as $factor_id => $factor) {
       if (isset($scores[$factor_id])) {
         $score = $scores[$factor_id];
-        
+
         if ($factor['type'] === 'qualitative') {
           // Collect qualitative factors for the table at the top.
           $classification = $this->convertNumericToQualitative($factor_id, $score);
@@ -331,14 +331,15 @@ final class ContentMarketingAuditAnalyzer extends AnalyzePluginBase {
             'label' => $factor['label'],
             'data' => $classification,
           ];
-        } else {
+        }
+        else {
           // Collect quantitative factors for gauges below.
           $quantitative_factors[$factor_id] = $factor;
         }
       }
     }
 
-    // Display qualitative factors in a single table at the top
+    // Display qualitative factors in a single table at the top.
     if (!empty($qualitative_rows)) {
       $build['qualitative_table'] = [
         '#theme' => 'analyze_table',
@@ -348,7 +349,7 @@ final class ContentMarketingAuditAnalyzer extends AnalyzePluginBase {
       ];
     }
 
-    // Display quantitative factors as individual gauges below
+    // Display quantitative factors as individual gauges below.
     foreach ($quantitative_factors as $factor_id => $factor) {
       if (isset($scores[$factor_id])) {
         $score = $scores[$factor_id];
@@ -376,20 +377,20 @@ final class ContentMarketingAuditAnalyzer extends AnalyzePluginBase {
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity.
    *
-   * @return array
+   * @return array<string, float>
    *   Array of scores keyed by factor ID.
    */
   private function getStoredScores(EntityInterface $entity): array {
     $scores = [];
     $factors = $this->storage->getFactors();
-    
+
     foreach ($factors as $factor_id => $factor) {
       $score = $this->storage->getScore($entity, $factor_id);
       if ($score !== NULL) {
         $scores[$factor_id] = $score;
       }
     }
-    
+
     return $scores;
   }
 
@@ -407,7 +408,8 @@ final class ContentMarketingAuditAnalyzer extends AnalyzePluginBase {
       if (is_string($value)) {
         $numeric_value = $this->convertQualitativeToNumeric($factor_id, $value);
         $this->storage->saveScore($entity, $factor_id, $numeric_value);
-      } else {
+      }
+      else {
         $this->storage->saveScore($entity, $factor_id, (float) $value);
       }
     }
@@ -426,12 +428,13 @@ final class ContentMarketingAuditAnalyzer extends AnalyzePluginBase {
    */
   private function convertQualitativeToNumeric(string $factor_id, string $classification): float {
     $options = $this->getQualitativeFactorOptions($factor_id);
-    $index = array_search($classification, $options, true);
-    
+    $index = array_search($classification, $options, TRUE);
+
     if ($index === FALSE) {
-      return 0.0; // Default fallback.
+      // Default fallback.
+      return 0.0;
     }
-    
+
     // Convert index to a value between -1.0 and 1.0.
     $option_count = count($options);
     return ($index / max(1, $option_count - 1)) * 2.0 - 1.0;
@@ -451,11 +454,11 @@ final class ContentMarketingAuditAnalyzer extends AnalyzePluginBase {
   private function convertNumericToQualitative(string $factor_id, float $numeric_value): string {
     $options = $this->getQualitativeFactorOptions($factor_id);
     $option_count = count($options);
-    
+
     // Convert from -1.0 to 1.0 range back to index.
     $index = round(($numeric_value + 1.0) / 2.0 * max(1, $option_count - 1));
     $index = max(0, min($option_count - 1, $index));
-    
+
     return $options[$index] ?? $options[0];
   }
 
@@ -465,7 +468,7 @@ final class ContentMarketingAuditAnalyzer extends AnalyzePluginBase {
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity to analyze.
    *
-   * @return array
+   * @return array<string, float|string>
    *   Array of scores/classifications keyed by factor ID.
    */
   private function analyzeContentMarketingAudit(EntityInterface $entity): array {
@@ -510,7 +513,7 @@ final class ContentMarketingAuditAnalyzer extends AnalyzePluginBase {
    * @param string $content
    *   The content to analyze.
    *
-   * @return array
+   * @return array<string, float>
    *   Array of scores keyed by factor ID.
    */
   private function analyzeQuantitativeFactors(EntityInterface $entity, array $factors, string $content): array {
@@ -523,7 +526,7 @@ final class ContentMarketingAuditAnalyzer extends AnalyzePluginBase {
       // Build the JSON template for quantitative factors.
       $json_keys = [];
       $factor_descriptions = [];
-      
+
       foreach ($factors as $factor_id => $factor) {
         $json_keys[] = '"' . $factor_id . '": 0.0';
         $factor_descriptions[] = $factor_id . ': ' . $factor['description'];
@@ -597,7 +600,7 @@ EOT;
    * @param string $content
    *   The content to analyze.
    *
-   * @return array
+   * @return array<string, string>
    *   Array of classifications keyed by factor ID.
    */
   private function analyzeQualitativeFactors(EntityInterface $entity, array $factors, string $content): array {
@@ -610,7 +613,7 @@ EOT;
       // Build the JSON template for qualitative factors.
       $json_keys = [];
       $factor_descriptions = [];
-      
+
       foreach ($factors as $factor_id => $factor) {
         $options = $this->getQualitativeFactorOptions($factor_id);
         $json_keys[] = '"' . $factor_id . '": "' . $options[0] . '"';
@@ -659,8 +662,9 @@ EOT;
           $options = $this->getQualitativeFactorOptions($factor_id);
           $value = (string) $decoded[$factor_id];
           // For qualitative factors, we store the classification as a string.
-          // We'll use a numeric representation for storage but keep the string value.
-          if (in_array($value, $options, true)) {
+          // We'll use a numeric representation for storage but keep the
+          // string value.
+          if (in_array($value, $options, TRUE)) {
             $classifications[$factor_id] = $value;
           }
         }
@@ -682,23 +686,23 @@ EOT;
    * @param string $factor_id
    *   The factor ID.
    *
-   * @return array
+   * @return array<string>
    *   Array of available options.
    */
   private function getQualitativeFactorOptions(string $factor_id): array {
     $options = $this->storage->getFactorOptions($factor_id);
-    
+
     // Fallback to default options if none stored.
     if (empty($options)) {
       switch ($factor_id) {
         case 'funnel_stage':
           return ['Awareness', 'Consideration', 'Decision', 'Retention'];
-        
+
         default:
           return ['Option 1', 'Option 2', 'Option 3'];
       }
     }
-    
+
     return $options;
   }
 
@@ -765,10 +769,10 @@ EOT;
   /**
    * Gets the default model configuration for chat operations.
    *
-   * @return array|null
+   * @return array<string, string>|null
    *   Array containing provider_id and model_id, or NULL if not configured.
    */
-  private function getDefaultModel() {
+  private function getDefaultModel(): ?array {
     $defaults = $this->aiProvider->getDefaultProviderForOperationType('chat');
     if (empty($defaults['provider_id']) || empty($defaults['model_id'])) {
       return NULL;
@@ -788,13 +792,17 @@ EOT;
   private function getScoreStatus(float $score): string {
     if ($score >= 0.7) {
       return $this->t('Excellent');
-    } elseif ($score >= 0.3) {
+    }
+    elseif ($score >= 0.3) {
       return $this->t('Good');
-    } elseif ($score >= -0.3) {
+    }
+    elseif ($score >= -0.3) {
       return $this->t('Average');
-    } elseif ($score >= -0.7) {
+    }
+    elseif ($score >= -0.7) {
       return $this->t('Needs Improvement');
-    } else {
+    }
+    else {
       return $this->t('Poor');
     }
   }

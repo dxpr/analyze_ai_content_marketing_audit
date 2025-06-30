@@ -19,16 +19,25 @@ final class ContentMarketingAuditSettingsForm extends FormBase {
     private readonly ContentMarketingAuditStorageService $storageService,
   ) {}
 
+  /**
+   * {@inheritdoc}
+   */
   public static function create(ContainerInterface $container): static {
     return new static(
       $container->get('analyze_ai_content_marketing_audit.storage'),
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getFormId(): string {
     return 'analyze_ai_content_marketing_audit_settings';
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function buildForm(array $form, FormStateInterface $form_state): array {
     $form['description'] = [
       '#markup' => $this->t('<p>Configure content marketing audit factors for AI analysis. Each factor evaluates content against specific marketing criteria.</p>'),
@@ -119,11 +128,14 @@ final class ContentMarketingAuditSettingsForm extends FormBase {
     return $form;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function submitForm(array &$form, FormStateInterface $form_state): void {
     // Process quantitative factors.
     $quantitative_factors = $form_state->getValue(['quantitative_section', 'quantitative_factors'], []);
     $this->processFactorSubmission($quantitative_factors);
-    
+
     // Process qualitative factors.
     $qualitative_factors = $form_state->getValue(['qualitative_section', 'qualitative_factors'], []);
     $this->processFactorSubmission($qualitative_factors);
@@ -140,7 +152,7 @@ final class ContentMarketingAuditSettingsForm extends FormBase {
   private function buildFactorTable(array &$table, array $factors, string $weight_class): void {
     foreach ($factors as $factor_id => $factor) {
       $table[$factor_id]['#attributes']['class'][] = 'draggable';
-      
+
       $table[$factor_id]['label'] = [
         '#markup' => '<strong>' . $this->t('@label', ['@label' => $factor['label']]) . '</strong><br><code>' . $factor_id . '</code>',
       ];
@@ -194,7 +206,7 @@ final class ContentMarketingAuditSettingsForm extends FormBase {
           $decoded = json_decode($factor['options'], TRUE);
           $options = is_array($decoded) ? $decoded : NULL;
         }
-        
+
         $this->storageService->saveFactor(
           $factor_id,
           $factor['label'],

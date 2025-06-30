@@ -37,4 +37,3 @@ analyze_ai_content_marketing_audit.batch:
     _title: 'Batch Content Marketing Audit Analysis'
   requirements:
     _permission: 'administer analyze settings'
-
