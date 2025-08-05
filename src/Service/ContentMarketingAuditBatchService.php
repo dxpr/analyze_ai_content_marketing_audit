@@ -121,7 +121,7 @@ final class ContentMarketingAuditBatchService {
     }
 
     $analyzer = \Drupal::service('plugin.manager.analyze')
-      ->createInstance('content_marketing_audit_analyzer');
+      ->createInstance('analyze_ai_content_marketing_audit_analyzer');
 
     foreach ($entities as $entity_data) {
       try {

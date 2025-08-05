@@ -158,7 +158,7 @@ final class ContentMarketingAuditBatchForm extends FormBase {
     $options = [];
     foreach ($status as $entity_type_id => $bundles) {
       foreach ($bundles as $bundle => $analyzers) {
-        if (isset($analyzers['content_marketing_audit_analyzer'])) {
+        if (isset($analyzers['analyze_ai_content_marketing_audit_analyzer'])) {
           $bundle_info = \Drupal::service('entity_type.bundle.info')->getBundleInfo($entity_type_id);
           $label = $bundle_info[$bundle]['label'] ?? $bundle;
           $options["{$entity_type_id}:{$bundle}"] = "{$entity_type_id} - {$label}";

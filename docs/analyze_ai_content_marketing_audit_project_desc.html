@@ -1,0 +1,50 @@
+<p>
+  The AI Content Marketing Audit is part of the <a href="https://www.drupal.org/project/ai">AI module</a> ecosystem. It provides comprehensive AI-powered content marketing analysis for Drupal content, evaluating multiple marketing factors including usability, knowledge level, actionability, accuracy, business value, messaging, and brand voice fit.</p><p>The module's analysis framework is inspired by the principles outlined in "Content Strategy for the Web" by Kristina Halvorson and Melissa Rach, the go-to content strategy handbook that helps organizations realize the value of content while planning for its long-term success.
+</p>
+
+<h3 id="module-project--features">Features</h3>
+<ul>
+  <li>Multi-factor marketing analysis:
+    <ul>
+      <li>Quantitative factors (scored -1.0 to 1.0)</li>
+      <li>Qualitative factors (categorical classification)</li>
+      <li>Customizable factor weight and ordering</li>
+    </ul>
+  </li>
+  <li>Pre-configured marketing factors:
+    <ul>
+      <li>Usability - Content ease of understanding and action</li>
+      <li>Knowledge Level - Expertise and authority demonstration</li>
+      <li>Actionability - Clear next steps and actionable insights</li>
+      <li>Accuracy - Factual correctness and currency</li>
+      <li>Business Value - Support for business goals and stakeholder value</li>
+      <li>Messaging - Clarity, compelling nature, and consistency</li>
+      <li>Brand Voice Fit - Alignment with brand guidelines</li>
+    </ul>
+  </li>
+  <li>Factor management interface for adding/editing/deleting custom factors</li>
+  <li>Visual gauge displays for quantitative factor scores</li>
+  <li>Batch processing for analyzing existing content</li>
+  <li>Integration with the Analyze framework</li>
+  <li>Views integration with colored tables for reporting</li>
+</ul>
+
+<h3 id="module-project--post-installation">Post-installation</h3>
+<ol>
+  <li>Configure AI provider settings at /admin/config/ai/providers</li>
+  <li>Manage audit factors at /admin/config/analyze/content-marketing-audit</li>
+  <li>Enable/disable the analyzer per content type at /admin/config/content/analyze-settings</li>
+  <li>Configure permissions at /admin/people/permissions#module-analyze_ai_content_marketing_audit</li>
+  <li>Access content marketing audit through the Analyze tab on content</li>
+  <li>Run batch analysis at /admin/config/analyze/content-marketing-audit/batch</li>
+</ol>
+
+<h3 id="module-project--additional-requirements">Additional requirements</h3>
+<p>
+  This module requires:
+  <ul>
+    <li><a href="https://www.drupal.org/project/analyze">Analyze</a> module</li>
+    <li><a href="https://www.drupal.org/project/ai">AI</a> module with a configured provider</li>
+    <li><a href="https://www.drupal.org/project/views_color_scales">Views Color Scales</a> module (provides colored tables for report page)</li>
+  </ul>
+</p>
