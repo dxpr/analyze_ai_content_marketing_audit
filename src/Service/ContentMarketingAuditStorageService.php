@@ -14,13 +14,13 @@ use Drupal\Core\DependencyInjection\DependencySerializationTrait;
  * Service for storing and retrieving content marketing audit analysis results.
  */
 final class ContentMarketingAuditStorageService {
-
   use DependencySerializationTrait;
 
   public function __construct(
     private readonly Connection $database,
     private readonly EntityTypeManagerInterface $entityTypeManager,
-  ) {}
+  ) {
+  }
 
   /**
    * Gets the content marketing audit score for a specific entity and factor.

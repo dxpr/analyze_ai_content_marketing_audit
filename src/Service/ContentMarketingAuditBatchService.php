@@ -12,14 +12,14 @@ use Drupal\Core\DependencyInjection\DependencySerializationTrait;
  * Service for batch processing content marketing audit analysis.
  */
 final class ContentMarketingAuditBatchService {
-
   use StringTranslationTrait;
   use DependencySerializationTrait;
 
   public function __construct(
     private readonly EntityTypeManagerInterface $entityTypeManager,
     private readonly ContentMarketingAuditStorageService $storageService,
-  ) {}
+  ) {
+  }
 
   /**
    * Gets entities that need content marketing audit analysis.
@@ -44,7 +44,7 @@ final class ContentMarketingAuditBatchService {
       $query = $storage->getQuery()
         ->accessCheck(TRUE)
         ->condition('type', $bundle)
-      // Only published content.
+          // Only published content.
         ->condition('status', 1);
 
       if (!$force_refresh) {
@@ -94,7 +94,7 @@ final class ContentMarketingAuditBatchService {
     $query = $connection->select('analyze_ai_content_marketing_audit_results', 'r')
       ->fields('r', ['entity_id'])
       ->condition('entity_type', $entity_type_id)
-    // Only recent analysis.
+      // Only recent analysis.
       ->condition('analyzed_timestamp', strtotime('-7 days'), '>')
       ->distinct();
 

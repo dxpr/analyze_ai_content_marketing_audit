@@ -14,7 +14,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Form for deleting a content marketing audit factor.
  */
 final class DeleteFactorForm extends ConfirmFormBase {
-
   /**
    * The factor to be deleted.
    */
@@ -27,15 +26,16 @@ final class DeleteFactorForm extends ConfirmFormBase {
 
   public function __construct(
     private readonly ContentMarketingAuditStorageService $storageService,
-  ) {}
+  ) {
+  }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container): static {
     return new static(
-      $container->get('analyze_ai_content_marketing_audit.storage'),
-    );
+          $container->get('analyze_ai_content_marketing_audit.storage'),
+      );
   }
 
   /**

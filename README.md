@@ -1,15 +1,19 @@
 # AI Content Marketing Audit
 
-AI-powered content marketing analysis evaluating seven critical factors that drive engagement and business results.
+AI-powered content marketing analysis evaluating seven critical factors that drive
+engagement and business results.
 
 ## Features
 
-- **Seven Marketing Factors**: Usability, Knowledge Level, Actionability, Accuracy, Business Value, Messaging, Brand Voice Fit
-- **Dual Analysis**: Quantitative scoring (-1.0 to +1.0) and qualitative classification
+- **Seven Marketing Factors**: Usability, Knowledge Level, Actionability, Accuracy,
+  Business Value, Messaging, Brand Voice Fit
+- **Dual Analysis**: Quantitative scoring (-1.0 to +1.0) and qualitative
+  classification
 - **Configurable Factors**: Add, edit, delete custom audit factors
 - **Batch Processing**: Analyze large content volumes efficiently
 - **Views Integration**: Custom reports and dashboards
-- **Smart Caching**: Performance optimization with content/config-based invalidation
+- **Smart Caching**: Performance optimization with content/config-based
+  invalidation
 
 ## Requirements
 
@@ -29,7 +33,8 @@ drush en analyze_ai_content_marketing_audit
 1. Configure AI provider at `/admin/config/analyze/ai`
 2. Manage factors at `/admin/config/analyze/content-marketing-audit`
 3. Enable per content type at `/admin/config/system/analyze-settings`
-4. Set permissions at `/admin/people/permissions#module-analyze_ai_content_marketing_audit`
+4. Set permissions at
+   `/admin/people/permissions#module-analyze_ai_content_marketing_audit`
 
 ### Factor Management
 - **Add factors**: Click "Add factor" with ID, label, description, weight
@@ -63,12 +68,14 @@ drush en analyze_ai_content_marketing_audit
 ## Views Integration
 
 ### Default Reports
-Access at `/admin/reports/content-marketing-audit` showing content title, factor type, score, and analysis date.
+Access at `/admin/reports/content-marketing-audit` showing content title, factor
+type, score, and analysis date.
 
 ### Custom Views
 - Base table: "Content Marketing Audit Results"
 - Filter by factor type, score range, content title, analysis date
-- Install [Views Color Scales](https://www.drupal.org/project/views_color_scales) for color-coded results
+- Install [Views Color Scales](https://www.drupal.org/project/views_color_scales)
+  for color-coded results
 
 ## API Usage
 

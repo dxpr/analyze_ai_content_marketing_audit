@@ -27,7 +27,6 @@ use Drupal\analyze_ai_content_marketing_audit\Service\ContentMarketingAuditStora
  * )
  */
 final class AIContentMarketingAuditAnalyzer extends AnalyzePluginBase {
-
   /**
    * The AI provider manager.
    *
@@ -121,20 +120,20 @@ final class AIContentMarketingAuditAnalyzer extends AnalyzePluginBase {
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): static {
     return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('analyze.helper'),
-      $container->get('current_user'),
-      $container->get('ai.provider'),
-      $container->get('config.factory'),
-      $container->get('entity_type.manager'),
-      $container->get('renderer'),
-      $container->get('language_manager'),
-      $container->get('messenger'),
-      $container->get('ai.prompt_json_decode'),
-      $container->get('analyze_ai_content_marketing_audit.storage'),
-    );
+          $configuration,
+          $plugin_id,
+          $plugin_definition,
+          $container->get('analyze.helper'),
+          $container->get('current_user'),
+          $container->get('ai.provider'),
+          $container->get('config.factory'),
+          $container->get('entity_type.manager'),
+          $container->get('renderer'),
+          $container->get('language_manager'),
+          $container->get('messenger'),
+          $container->get('ai.prompt_json_decode'),
+          $container->get('analyze_ai_content_marketing_audit.storage'),
+      );
   }
 
   /**
@@ -152,7 +151,7 @@ final class AIContentMarketingAuditAnalyzer extends AnalyzePluginBase {
     $factors = $this->storage->getFactors();
 
     $enabled = array_filter($factors, function ($factor) {
-      return $factor['status'] == 1;
+        return $factor['status'] == 1;
     });
 
     return $enabled;
@@ -179,10 +178,10 @@ final class AIContentMarketingAuditAnalyzer extends AnalyzePluginBase {
       '#theme' => 'analyze_table',
       '#table_title' => 'Content Marketing Audit',
       '#rows' => [
-        [
-          'label' => 'Status',
-          'data' => $message,
-        ],
+      [
+        'label' => 'Status',
+        'data' => $message,
+      ],
       ],
     ];
   }
@@ -232,10 +231,10 @@ final class AIContentMarketingAuditAnalyzer extends AnalyzePluginBase {
           '#theme' => 'analyze_table',
           '#table_title' => $factor['label'],
           '#rows' => [
-            [
-              'label' => 'Classification',
-              'data' => $classification,
-            ],
+          [
+            'label' => 'Classification',
+            'data' => $classification,
+          ],
           ],
         ];
       }
@@ -314,12 +313,6 @@ final class AIContentMarketingAuditAnalyzer extends AnalyzePluginBase {
       '#attributes' => [
         'class' => ['analyze-content-marketing-audit-report'],
       ],
-    ];
-
-    $build['title'] = [
-      '#type' => 'html_tag',
-      '#tag' => 'h2',
-      '#value' => $this->t('Content Marketing Audit Analysis'),
     ];
 
     // Separate qualitative and quantitative factors.
@@ -731,8 +724,8 @@ EOT;
 
     // Convert to string and strip HTML for content marketing audit analysis.
     $content = is_object($rendered) && method_exists($rendered, '__toString')
-      ? $rendered->__toString()
-      : (string) $rendered;
+        ? $rendered->__toString()
+        : (string) $rendered;
 
     // Clean up the content for analysis.
     $content = strip_tags($content);

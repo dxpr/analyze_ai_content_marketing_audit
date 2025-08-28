@@ -19,7 +19,6 @@ use Drupal\Component\Gettext\PoItem;
  * @ViewsField("content_marketing_audit_score")
  */
 class ContentMarketingAuditScore extends FieldPluginBase {
-
   /**
    * The content marketing audit storage service.
    *
