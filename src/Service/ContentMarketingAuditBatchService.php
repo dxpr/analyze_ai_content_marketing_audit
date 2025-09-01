@@ -47,14 +47,6 @@ final class ContentMarketingAuditBatchService {
           // Only published content.
         ->condition('status', 1);
 
-      if (!$force_refresh) {
-        // Exclude entities that already have recent analysis.
-        $analyzed_ids = $this->getAnalyzedEntityIds($entity_type_id, $bundle);
-        if (!empty($analyzed_ids)) {
-          $query->condition($storage->getEntityType()->getKey('id'), $analyzed_ids, 'NOT IN');
-        }
-      }
-
       if ($limit > 0) {
         $remaining = $limit - count($entities);
         if ($remaining <= 0) {
