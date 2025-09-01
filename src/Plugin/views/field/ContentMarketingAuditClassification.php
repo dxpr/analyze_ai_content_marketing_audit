@@ -17,7 +17,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @ViewsField("content_marketing_audit_classification")
  */
 class ContentMarketingAuditClassification extends FieldPluginBase {
-
   /**
    * The content marketing audit storage service.
    *

@@ -17,15 +17,16 @@ final class ContentMarketingAuditBatchForm extends FormBase {
 
   public function __construct(
     private readonly ContentMarketingAuditBatchService $batchService,
-  ) {}
+  ) {
+  }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container): static {
     return new static(
-      $container->get('analyze_ai_content_marketing_audit.batch_service'),
-    );
+          $container->get('analyze_ai_content_marketing_audit.batch_service'),
+      );
   }
 
   /**
@@ -98,10 +99,10 @@ final class ContentMarketingAuditBatchForm extends FormBase {
     $selected_types = array_filter($values['entity_types']);
 
     $entities = $this->batchService->getEntitiesForAnalysis(
-      $selected_types,
-      (bool) $values['force_refresh'],
-      (int) $values['limit']
-    );
+          $selected_types,
+          (bool) $values['force_refresh'],
+          (int) $values['limit']
+      );
 
     if (empty($entities)) {
       $this->messenger()->addWarning($this->t('No entities found for analysis.'));

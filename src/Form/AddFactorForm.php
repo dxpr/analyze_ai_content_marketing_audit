@@ -17,15 +17,16 @@ final class AddFactorForm extends FormBase {
 
   public function __construct(
     private readonly ContentMarketingAuditStorageService $storageService,
-  ) {}
+  ) {
+  }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container): static {
     return new static(
-      $container->get('analyze_ai_content_marketing_audit.storage'),
-    );
+          $container->get('analyze_ai_content_marketing_audit.storage'),
+      );
   }
 
   /**
@@ -164,14 +165,14 @@ final class AddFactorForm extends FormBase {
     }
 
     $this->storageService->saveFactor(
-      $values['id'],
-      $values['label'],
-      $values['description'] ?? '',
-      $values['type'],
-      $options,
-      (int) $values['weight'],
-      (int) $values['status']
-    );
+          $values['id'],
+          $values['label'],
+          $values['description'] ?? '',
+          $values['type'],
+          $options,
+          (int) $values['weight'],
+          (int) $values['status']
+      );
 
     $this->messenger()->addStatus($this->t('Content marketing audit factor %label has been added.', [
       '%label' => $values['label'],

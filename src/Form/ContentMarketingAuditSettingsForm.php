@@ -17,15 +17,16 @@ final class ContentMarketingAuditSettingsForm extends FormBase {
 
   public function __construct(
     private readonly ContentMarketingAuditStorageService $storageService,
-  ) {}
+  ) {
+  }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container): static {
     return new static(
-      $container->get('analyze_ai_content_marketing_audit.storage'),
-    );
+          $container->get('analyze_ai_content_marketing_audit.storage'),
+      );
   }
 
   /**
@@ -42,6 +43,27 @@ final class ContentMarketingAuditSettingsForm extends FormBase {
     $form['description'] = [
       '#markup' => $this->t('<p>Configure content marketing audit factors for AI analysis. Each factor evaluates content against specific marketing criteria.</p>'),
     ];
+
+    // Add link to reports page if user has permission.
+    $current_user = \Drupal::currentUser();
+    if ($current_user->hasPermission('access site reports')) {
+      $reports_url = Url::fromRoute('view.ai_content_marketing_audit_results.page_1');
+      if ($reports_url->access()) {
+        $form['actions_top'] = [
+          '#type' => 'container',
+          '#attributes' => ['class' => ['form-actions']],
+          '#weight' => -10,
+          'report_link' => [
+            '#type' => 'link',
+            '#title' => $this->t('View reports'),
+            '#url' => $reports_url,
+            '#attributes' => [
+              'class' => ['button', 'button--small', 'button--primary'],
+            ],
+          ],
+        ];
+      }
+    }
 
     // Get factors by type.
     $quantitative_factors = $this->storageService->getQuantitativeFactors();
@@ -74,11 +96,11 @@ final class ContentMarketingAuditSettingsForm extends FormBase {
           $this->t('Operations'),
         ],
         '#tabledrag' => [
-          [
-            'action' => 'order',
-            'relationship' => 'sibling',
-            'group' => 'quantitative-factor-weight',
-          ],
+        [
+          'action' => 'order',
+          'relationship' => 'sibling',
+          'group' => 'quantitative-factor-weight',
+        ],
         ],
         '#empty' => $this->t('No quantitative factors available.'),
       ];
@@ -104,11 +126,11 @@ final class ContentMarketingAuditSettingsForm extends FormBase {
           $this->t('Operations'),
         ],
         '#tabledrag' => [
-          [
-            'action' => 'order',
-            'relationship' => 'sibling',
-            'group' => 'qualitative-factor-weight',
-          ],
+        [
+          'action' => 'order',
+          'relationship' => 'sibling',
+          'group' => 'qualitative-factor-weight',
+        ],
         ],
         '#empty' => $this->t('No qualitative factors available.'),
       ];
@@ -208,14 +230,14 @@ final class ContentMarketingAuditSettingsForm extends FormBase {
         }
 
         $this->storageService->saveFactor(
-          $factor_id,
-          $factor['label'],
-          $factor['description'],
-          $factor['type'],
-          $options,
-          (int) $values['weight'],
-          (int) $values['status']
-        );
+              $factor_id,
+              $factor['label'],
+              $factor['description'],
+              $factor['type'],
+              $options,
+              (int) $values['weight'],
+              (int) $values['status']
+          );
       }
     }
   }
