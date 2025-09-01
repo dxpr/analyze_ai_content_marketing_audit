@@ -73,7 +73,7 @@ final class ContentMarketingAuditBatchForm extends FormBase {
     $form['limit'] = [
       '#type' => 'number',
       '#title' => $this->t('Limit'),
-      '#default_value' => 50,
+      '#default_value' => 100,
       '#min' => 1,
       '#max' => 1000,
       '#description' => $this->t('Maximum number of entities to process.'),
