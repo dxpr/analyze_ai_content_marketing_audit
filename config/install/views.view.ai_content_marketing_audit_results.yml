@@ -10,7 +10,7 @@ dependencies:
     - user
     - views_color_scales
 _core:
-  default_config_hash: Xyn6XU_CX-QuJeKPU6gh_S0liJGiqYcfKJO0pbER7jE
+  default_config_hash: QvqkDaQBVhp3o9Lr-tpBJA1wtecnFaLpg__QbNEAS5Y
 id: ai_content_marketing_audit_results
 label: 'AI Content Marketing Audit Analysis'
 module: views
@@ -426,8 +426,8 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: string
-          operator: in
-          value: {  }
+          operator: '='
+          value: ''
           group: 1
           exposed: true
           expose:
@@ -436,6 +436,8 @@ display:
             description: ''
             use_operator: false
             operator: factor_id_op
+            operator_limit_selection: false
+            operator_list: {  }
             identifier: factor_id
             required: false
             remember: false
@@ -443,7 +445,12 @@ display:
             remember_roles:
               authenticated: authenticated
               anonymous: '0'
+              content_editor: '0'
+              marketer: '0'
+              site_bui: '0'
+              content_administrator: '0'
               administrator: '0'
+            placeholder: ''
             reduce: false
           is_grouped: false
           group_info:
