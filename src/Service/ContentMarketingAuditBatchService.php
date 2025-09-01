@@ -89,17 +89,22 @@ final class ContentMarketingAuditBatchService {
    *   Array of entity IDs.
    */
   private function getAnalyzedEntityIds(string $entity_type_id, string $bundle): array {
-    $connection = \Drupal::database();
+    // Get entities that have valid cached analysis.
+    $query = $this->entityTypeManager->getStorage($entity_type_id)->getQuery()
+      ->accessCheck(TRUE)
+      ->condition('type', $bundle);
 
-    $query = $connection->select('analyze_ai_content_marketing_audit_results', 'r')
-      ->fields('r', ['entity_id'])
-      ->condition('entity_type', $entity_type_id)
-      // Only recent analysis.
-      ->condition('analyzed_timestamp', strtotime('-7 days'), '>')
-      ->distinct();
+    $all_ids = $query->execute();
+    $analyzed_ids = [];
 
-    $ids = $query->execute()->fetchCol();
-    return array_unique($ids);
+    foreach ($all_ids as $id) {
+      $entity = $this->entityTypeManager->getStorage($entity_type_id)->load($id);
+      if ($entity && !empty($this->storageService->getScores($entity))) {
+        $analyzed_ids[] = $id;
+      }
+    }
+
+    return $analyzed_ids;
   }
 
   /**
