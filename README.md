@@ -1,12 +1,12 @@
 # AI Content Marketing Audit
 
-AI-powered content marketing analysis evaluating seven critical factors that drive
-engagement and business results.
+AI-powered content marketing analysis evaluating seven critical
+factors that drive engagement and business results.
 
 ## Features
 
-- **Seven Marketing Factors**: Usability, Knowledge Level, Actionability, Accuracy,
-  Business Value, Messaging, Brand Voice Fit
+- **Seven Marketing Factors**: Usability, Knowledge Level, Actionability,
+  Accuracy, Business Value, Messaging, Brand Voice Fit
 - **Dual Analysis**: Quantitative scoring (-1.0 to +1.0) and qualitative
   classification
 - **Configurable Factors**: Add, edit, delete custom audit factors

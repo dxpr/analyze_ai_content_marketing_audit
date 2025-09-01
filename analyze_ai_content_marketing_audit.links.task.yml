@@ -1,3 +1,14 @@
+analyze_ai_content_marketing_audit.settings:
+  route_name: analyze_ai_content_marketing_audit.settings
+  title: 'Settings'
+  base_route: analyze_ai_content_marketing_audit.settings
+
+analyze_ai_content_marketing_audit.batch:
+  route_name: analyze_ai_content_marketing_audit.batch
+  title: 'Batch Analysis'
+  base_route: analyze_ai_content_marketing_audit.settings
+  weight: 10
+
 analyze_ai_content_marketing_audit.reports.scores:
   route_name: view.content_marketing_audit_scores.page_1
   title: 'Scores'

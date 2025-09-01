@@ -779,31 +779,4 @@ EOT;
     return $defaults;
   }
 
-  /**
-   * Gets a human-readable status for a score.
-   *
-   * @param float $score
-   *   The score.
-   *
-   * @return string
-   *   The status description.
-   */
-  private function getScoreStatus(float $score): string {
-    if ($score >= 0.7) {
-      return $this->t('Excellent');
-    }
-    elseif ($score >= 0.3) {
-      return $this->t('Good');
-    }
-    elseif ($score >= -0.3) {
-      return $this->t('Average');
-    }
-    elseif ($score >= -0.7) {
-      return $this->t('Needs Improvement');
-    }
-    else {
-      return $this->t('Poor');
-    }
-  }
-
 }
