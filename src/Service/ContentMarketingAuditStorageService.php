@@ -23,6 +23,32 @@ final class ContentMarketingAuditStorageService {
   }
 
   /**
+   * Gets all content marketing audit scores for a specific entity.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity to get the scores for.
+   *
+   * @return array<string, float>
+   *   Array of factor_id => score pairs.
+   */
+  public function getScores(EntityInterface $entity): array {
+    $content_hash = $this->generateContentHash($entity);
+    $config_hash = $this->generateConfigHash();
+
+    $results = $this->database->select('analyze_ai_content_marketing_audit_results', 'r')
+      ->fields('r', ['factor_id', 'score'])
+      ->condition('entity_type', $entity->getEntityTypeId())
+      ->condition('entity_id', $entity->id())
+      ->condition('langcode', $entity->language()->getId())
+      ->condition('content_hash', $content_hash)
+      ->condition('config_hash', $config_hash)
+      ->execute()
+      ->fetchAllKeyed();
+
+    return array_map('floatval', $results);
+  }
+
+  /**
    * Gets the content marketing audit score for a specific entity and factor.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
