@@ -31,8 +31,14 @@ if [[ $DRUPAL_RECOMMENDED_PROJECT == 11.* ]]; then
   composer require drupal/statistics
 fi
 
+# Install module dependencies
+composer require drupal/analyze:^1.0 --no-update
+composer require drupal/ai:^1.0 --no-update
+composer require drupal/views_color_scales:^1.0 --no-update
+composer update
+
 # Install drupal-check with compatible version
 composer require $DRUPAL_CHECK_TOOL --dev --with-all-dependencies
 
-# Run drupal-check
-./vendor/bin/drupal-check --drupal-root . -ad web/modules/contrib/analyze_ai_content_marketing_audit 
+# Run drupal-check only on our module
+./vendor/bin/drupal-check --drupal-root . -ad web/modules/contrib/analyze_ai_content_marketing_audit
