@@ -3,7 +3,7 @@ set -vo pipefail
 
 DRUPAL_RECOMMENDED_PROJECT=${DRUPAL_RECOMMENDED_PROJECT:-11.x-dev}
 PHP_EXTENSIONS="gd"
-DRUPAL_CHECK_TOOL="mglaman/drupal-check:^1.0"
+DRUPAL_CHECK_TOOL="mglaman/drupal-check:1.5.0"
 
 # Install required PHP extensions
 for ext in $PHP_EXTENSIONS; do
@@ -30,6 +30,11 @@ fi
 if [[ $DRUPAL_RECOMMENDED_PROJECT == 11.* ]]; then
   composer require drupal/statistics
 fi
+
+# Force Symfony Console compatibility for drupal-check
+composer require symfony/console:^6.4 --dev --no-update
+composer require phpstan/phpstan:^1.11 --dev --no-update
+composer require mglaman/phpstan-drupal:^1.2 --dev --no-update
 
 # Install drupal-check with compatible version
 composer require $DRUPAL_CHECK_TOOL --dev --with-all-dependencies

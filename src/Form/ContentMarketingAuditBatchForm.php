@@ -19,7 +19,7 @@ final class ContentMarketingAuditBatchForm extends FormBase {
 
   public function __construct(
     private readonly ContentMarketingAuditBatchService $batchService,
-    private readonly ConfigFactoryInterface $configFactory,
+    protected ConfigFactoryInterface $configFactory,
     private readonly EntityTypeBundleInfoInterface $bundleInfo,
   ) {
   }
