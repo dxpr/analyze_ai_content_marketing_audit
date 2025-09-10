@@ -31,14 +31,3 @@ services:
       DRUPAL_RECOMMENDED_PROJECT: 11.x-dev
     volumes:
       - .:/src
-
-  drupal-check-with-deps:
-    image: composer:2.7
-    profiles: ["lint"]
-    working_dir: /
-    command: bash -c "/src/scripts/run-drupal-check-with-deps.sh"
-    tty: true
-    environment:
-      DRUPAL_RECOMMENDED_PROJECT: 11.x-dev
-    volumes:
-      - .:/src
