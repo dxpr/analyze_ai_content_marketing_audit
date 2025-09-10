@@ -34,7 +34,10 @@ if [ ! -L "web/modules/contrib/analyze_ai_content_marketing_audit" ]; then
   ln -s /src web/modules/contrib/analyze_ai_content_marketing_audit
 fi
 
-# Install PHPStan extensions for Drupal 11 and Drush for command analysis
+# Install module dependencies for proper class resolution
+composer require drupal/analyze:^1.0 drupal/ai:^1.0 drupal/views_color_scales:^1.0 --no-interaction
+
+# Install PHPStan extensions for Drupal 11 and Drush for command analysis  
 composer require --dev phpstan/phpstan mglaman/phpstan-drupal phpstan/phpstan-deprecation-rules drush/drush --with-all-dependencies --no-interaction
 
 # Run phpstan
