@@ -7,7 +7,6 @@ namespace Drupal\analyze_ai_content_marketing_audit\Form;
 use Drupal\Core\Url;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\analyze_ai_content_marketing_audit\Service\ContentMarketingAuditBatchService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -19,7 +18,6 @@ final class ContentMarketingAuditBatchForm extends FormBase {
 
   public function __construct(
     private readonly ContentMarketingAuditBatchService $batchService,
-    protected ConfigFactoryInterface $configFactory,
     private readonly EntityTypeBundleInfoInterface $bundleInfo,
   ) {
   }
@@ -30,7 +28,6 @@ final class ContentMarketingAuditBatchForm extends FormBase {
   public static function create(ContainerInterface $container): static {
     return new static(
           $container->get('analyze_ai_content_marketing_audit.batch_service'),
-          $container->get('config.factory'),
           $container->get('entity_type.bundle.info'),
       );
   }
