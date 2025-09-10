@@ -3,7 +3,7 @@ set -vo pipefail
 
 DRUPAL_RECOMMENDED_PROJECT=${DRUPAL_RECOMMENDED_PROJECT:-11.x-dev}
 PHP_EXTENSIONS="gd"
-DRUPAL_CHECK_TOOL="mglaman/drupal-check:^1.5"
+DRUPAL_CHECK_TOOL="mglaman/drupal-check:^1.0"
 
 # Install required PHP extensions
 for ext in $PHP_EXTENSIONS; do

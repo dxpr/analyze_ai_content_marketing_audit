@@ -3,7 +3,7 @@ set -vo pipefail
 
 DRUPAL_RECOMMENDED_PROJECT=${DRUPAL_RECOMMENDED_PROJECT:-11.x-dev}
 PHP_EXTENSIONS="gd"
-DRUPAL_CHECK_TOOL="mglaman/drupal-check:^1.5"
+DRUPAL_CHECK_TOOL="mglaman/drupal-check:^1.0"
 
 # Install required PHP extensions
 for ext in $PHP_EXTENSIONS; do
@@ -36,6 +36,11 @@ composer require drupal/analyze:^1.0 --no-update
 composer require drupal/ai:^1.0 --no-update
 composer require drupal/views_color_scales:^1.0 --no-update
 composer update
+
+# Force PHPStan 1.x compatibility for Drupal 11
+composer config --no-plugins allow-plugins.phpstan/extension-installer true
+composer require phpstan/phpstan:"^1.10" --no-update --dev
+composer require mglaman/phpstan-drupal:"^1.2" --no-update --dev
 
 # Install drupal-check with compatible version
 composer require $DRUPAL_CHECK_TOOL --dev --with-all-dependencies
