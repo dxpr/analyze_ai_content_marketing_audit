@@ -7,6 +7,7 @@ namespace Drupal\analyze_ai_content_marketing_audit\Service;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
+use Drupal\analyze\AnalyzePluginManager;
 
 /**
  * Service for batch processing content marketing audit analysis.
@@ -18,6 +19,7 @@ final class ContentMarketingAuditBatchService {
   public function __construct(
     private readonly EntityTypeManagerInterface $entityTypeManager,
     private readonly ContentMarketingAuditStorageService $storageService,
+    private readonly AnalyzePluginManager $analyzePluginManager,
   ) {
   }
 
@@ -70,36 +72,6 @@ final class ContentMarketingAuditBatchService {
   }
 
   /**
-   * Gets IDs of entities that already have analysis.
-   *
-   * @param string $entity_type_id
-   *   The entity type ID.
-   * @param string $bundle
-   *   The bundle.
-   *
-   * @return array<int, int|string>
-   *   Array of entity IDs.
-   */
-  private function getAnalyzedEntityIds(string $entity_type_id, string $bundle): array {
-    // Get entities that have valid cached analysis.
-    $query = $this->entityTypeManager->getStorage($entity_type_id)->getQuery()
-      ->accessCheck(TRUE)
-      ->condition('type', $bundle);
-
-    $all_ids = $query->execute();
-    $analyzed_ids = [];
-
-    foreach ($all_ids as $id) {
-      $entity = $this->entityTypeManager->getStorage($entity_type_id)->load($id);
-      if ($entity && !empty($this->storageService->getScores($entity))) {
-        $analyzed_ids[] = $id;
-      }
-    }
-
-    return $analyzed_ids;
-  }
-
-  /**
    * Processes a batch of entities for content marketing audit analysis.
    *
    * @param array $entities
@@ -117,7 +89,7 @@ final class ContentMarketingAuditBatchService {
       $context['results']['errors'] = [];
     }
 
-    $analyzer = \Drupal::service('plugin.manager.analyze')
+    $analyzer = $this->analyzePluginManager
       ->createInstance('analyze_ai_content_marketing_audit_analyzer');
 
     foreach ($entities as $entity_data) {

@@ -8,6 +8,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\analyze_ai_content_marketing_audit\Service\ContentMarketingAuditStorageService;
 use Drupal\Core\Url;
+use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -17,6 +18,7 @@ final class ContentMarketingAuditSettingsForm extends FormBase {
 
   public function __construct(
     private readonly ContentMarketingAuditStorageService $storageService,
+    private readonly AccountInterface $currentUser,
   ) {
   }
 
@@ -26,6 +28,7 @@ final class ContentMarketingAuditSettingsForm extends FormBase {
   public static function create(ContainerInterface $container): static {
     return new static(
           $container->get('analyze_ai_content_marketing_audit.storage'),
+          $container->get('current_user'),
       );
   }
 
@@ -45,8 +48,7 @@ final class ContentMarketingAuditSettingsForm extends FormBase {
     ];
 
     // Add link to reports page if user has permission.
-    $current_user = \Drupal::currentUser();
-    if ($current_user->hasPermission('access site reports')) {
+    if ($this->currentUser->hasPermission('access site reports')) {
       $reports_url = Url::fromRoute('view.ai_content_marketing_audit_results.page_1');
       if ($reports_url->access()) {
         $form['actions_top'] = [
