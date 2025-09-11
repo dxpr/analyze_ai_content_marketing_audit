@@ -9,6 +9,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\analyze_ai_content_marketing_audit\Service\ContentMarketingAuditStorageService;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Form for deleting a content marketing audit factor.
@@ -64,7 +65,7 @@ final class DeleteFactorForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getQuestion(): string {
+  public function getQuestion(): TranslatableMarkup {
     return $this->t('Are you sure you want to delete the content marketing audit factor %label?', [
       '%label' => $this->factor['label'] ?? $this->factorId,
     ]);
@@ -73,7 +74,7 @@ final class DeleteFactorForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getDescription(): string {
+  public function getDescription(): TranslatableMarkup {
     return $this->t('This action cannot be undone. All analysis results for this factor will also be deleted.');
   }
 
@@ -87,7 +88,7 @@ final class DeleteFactorForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getConfirmText(): string {
+  public function getConfirmText(): TranslatableMarkup {
     return $this->t('Delete');
   }
 

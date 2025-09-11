@@ -559,7 +559,14 @@ EOT;
       // Get response.
       $messages = new ChatInput($chat_array);
       $defaults = $this->getDefaultModel();
-      $message = $ai_provider->chat($messages, $defaults['model_id'])->getNormalized();
+      // Call chat method dynamically since interface may not define it.
+      if (method_exists($ai_provider, 'chat')) {
+        $response = $ai_provider->chat($messages, $defaults['model_id']);
+        $message = $response->getNormalized();
+      }
+      else {
+        return [];
+      }
 
       // Use the injected PromptJsonDecoder service.
       $decoded = $this->promptJsonDecoder->decode($message);
@@ -644,7 +651,14 @@ EOT;
       // Get response.
       $messages = new ChatInput($chat_array);
       $defaults = $this->getDefaultModel();
-      $message = $ai_provider->chat($messages, $defaults['model_id'])->getNormalized();
+      // Call chat method dynamically since interface may not define it.
+      if (method_exists($ai_provider, 'chat')) {
+        $response = $ai_provider->chat($messages, $defaults['model_id']);
+        $message = $response->getNormalized();
+      }
+      else {
+        return [];
+      }
 
       // Use the injected PromptJsonDecoder service.
       $decoded = $this->promptJsonDecoder->decode($message);
@@ -723,9 +737,7 @@ EOT;
     $rendered = $this->renderer->render($view);
 
     // Convert to string and strip HTML for content marketing audit analysis.
-    $content = is_object($rendered) && method_exists($rendered, '__toString')
-        ? $rendered->__toString()
-        : (string) $rendered;
+    $content = (string) $rendered;
 
     // Clean up the content for analysis.
     $content = strip_tags($content);
@@ -741,10 +753,10 @@ EOT;
   /**
    * Gets the AI provider for content marketing audit analysis.
    *
-   * @return \Drupal\ai\AiProviderInterface|null
+   * @return mixed
    *   The AI provider instance or NULL if not available.
    */
-  private function getAiProvider() {
+  private function getAiProvider(): mixed {
     // Check if we have any chat providers available.
     if (!$this->aiProvider->hasProvidersForOperationType('chat', TRUE)) {
       return NULL;
@@ -760,7 +772,9 @@ EOT;
     $ai_provider = $this->aiProvider->createInstance($defaults['provider_id']);
 
     // Configure provider with low temperature for more consistent results.
-    $ai_provider->setConfiguration(['temperature' => 0.2]);
+    if (method_exists($ai_provider, 'setConfiguration')) {
+      $ai_provider->setConfiguration(['temperature' => 0.2]);
+    }
 
     return $ai_provider;
   }
@@ -768,7 +782,7 @@ EOT;
   /**
    * Gets the default model configuration for chat operations.
    *
-   * @return array<string, string>|null
+   * @return array<string, mixed>|null
    *   Array containing provider_id and model_id, or NULL if not configured.
    */
   private function getDefaultModel(): ?array {

@@ -7,8 +7,9 @@ namespace Drupal\analyze_ai_content_marketing_audit\Service;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
+use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Config\ConfigFactoryInterface;
 
 /**
  * Service for storing and retrieving content marketing audit analysis results.
@@ -18,7 +19,8 @@ final class ContentMarketingAuditStorageService {
 
   public function __construct(
     private readonly Connection $database,
-    private readonly EntityTypeManagerInterface $entityTypeManager,
+    private readonly LanguageManagerInterface $languageManager,
+    private readonly ConfigFactoryInterface $configFactory,
   ) {
   }
 
@@ -107,7 +109,7 @@ final class ContentMarketingAuditStorageService {
       ->fields([
         'entity_type' => $entity->getEntityTypeId(),
         'entity_id' => $entity->id(),
-        'entity_revision_id' => $entity->getRevisionId(),
+        'entity_revision_id' => method_exists($entity, 'getRevisionId') ? $entity->getRevisionId() : NULL,
         'langcode' => $entity->language()->getId(),
         'factor_id' => $factor_id,
         'score' => $score,
@@ -284,8 +286,8 @@ final class ContentMarketingAuditStorageService {
    */
   private function generateContentHash(EntityInterface $entity): string {
     // Use the entity's own language for content hash.
-    $current_language = \Drupal::languageManager()->getCurrentLanguage()->getId();
-    \Drupal::languageManager()->setConfigOverrideLanguage($entity->language());
+    $current_language = $this->languageManager->getCurrentLanguage()->getId();
+    $this->languageManager->setConfigOverrideLanguage($entity->language());
 
     try {
       $content = '';
@@ -301,7 +303,7 @@ final class ContentMarketingAuditStorageService {
 
       return hash('sha256', $content . $entity->getEntityTypeId() . $entity->id() . $entity->language()->getId());
     } finally {
-      \Drupal::languageManager()->setConfigOverrideLanguage(\Drupal::languageManager()->getLanguage($current_language));
+      $this->languageManager->setConfigOverrideLanguage($this->languageManager->getLanguage($current_language));
     }
   }
 
@@ -316,7 +318,7 @@ final class ContentMarketingAuditStorageService {
     $factors = $this->getFactors();
     $config_data = [
       'factors' => $factors,
-      'ai_provider' => \Drupal::config('ai.settings')->get('default_provider'),
+      'ai_provider' => $this->configFactory->get('ai.settings')->get('default_provider'),
     ];
 
     return md5(serialize($config_data));
