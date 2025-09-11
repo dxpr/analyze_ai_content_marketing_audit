@@ -255,11 +255,16 @@ final class AIContentMarketingAuditAnalyzer extends AnalyzePluginBase {
       }
     }
 
-    // If no scores available but everything is configured correctly,
-    // show a helpful message.
+    // If no scores available, check if it's a provider issue or analysis failure.
     if (!empty($content = $this->getHtml($entity))) {
-      $ai_link = Link::createFromRoute($this->t('Configure AI provider'), 'ai.settings_form')->toString();
-      return $this->createStatusTable($this->t('No chat AI provider is configured for content marketing audit analysis. @link to set up AI services.', ['@link' => $ai_link]));
+      $ai_provider = $this->getAiProvider();
+      if (!$ai_provider) {
+        $ai_link = Link::createFromRoute($this->t('Configure AI provider'), 'ai.settings_form')->toString();
+        return $this->createStatusTable($this->t('No chat AI provider is configured for content marketing audit analysis. @link to set up AI services.', ['@link' => $ai_link]));
+      }
+      else {
+        return $this->createStatusTable($this->t('AI analysis failed to generate scores. Check logs for details or try again.'));
+      }
     }
 
     return $this->createStatusTable($this->t('This content has no text available for marketing analysis. Add content such as body text, fields, or descriptions to enable analysis.'));
@@ -296,10 +301,16 @@ final class AIContentMarketingAuditAnalyzer extends AnalyzePluginBase {
       }
     }
 
-    // If no scores available but content exists, show the table message.
+    // If no scores available but content exists, check if it's a provider issue or analysis failure.
     if (empty($scores) && !empty($this->getHtml($entity))) {
-      $ai_link = Link::createFromRoute($this->t('Configure AI provider'), 'ai.settings_form')->toString();
-      return $this->createStatusTable($this->t('No chat AI provider is configured for content marketing audit analysis. @link to set up AI services.', ['@link' => $ai_link]));
+      $ai_provider = $this->getAiProvider();
+      if (!$ai_provider) {
+        $ai_link = Link::createFromRoute($this->t('Configure AI provider'), 'ai.settings_form')->toString();
+        return $this->createStatusTable($this->t('No chat AI provider is configured for content marketing audit analysis. @link to set up AI services.', ['@link' => $ai_link]));
+      }
+      else {
+        return $this->createStatusTable($this->t('AI analysis failed to generate scores. Check logs for details or try again.'));
+      }
     }
 
     // If no content available, show that message.
@@ -320,11 +331,10 @@ final class AIContentMarketingAuditAnalyzer extends AnalyzePluginBase {
     $quantitative_factors = [];
 
     foreach ($enabled_factors as $factor_id => $factor) {
-      if (isset($scores[$factor_id])) {
-        $score = $scores[$factor_id];
-
-        if ($factor['type'] === 'qualitative') {
-          // Collect qualitative factors for the table at the top.
+      if ($factor['type'] === 'qualitative') {
+        if (isset($scores[$factor_id])) {
+          // Collect qualitative factors with scores for the table at the top.
+          $score = $scores[$factor_id];
           $classification = $this->convertNumericToQualitative($factor_id, $score);
           $qualitative_rows[] = [
             'label' => $factor['label'],
@@ -332,9 +342,16 @@ final class AIContentMarketingAuditAnalyzer extends AnalyzePluginBase {
           ];
         }
         else {
-          // Collect quantitative factors for gauges below.
-          $quantitative_factors[$factor_id] = $factor;
+          // Add failed qualitative analysis to table.
+          $qualitative_rows[] = [
+            'label' => $factor['label'],
+            'data' => $this->t('AI analysis failed to generate classification. Check logs for details or try again.'),
+          ];
         }
+      }
+      else {
+        // Collect all quantitative factors (both successful and failed).
+        $quantitative_factors[$factor_id] = $factor;
       }
     }
 
@@ -363,6 +380,19 @@ final class AIContentMarketingAuditAnalyzer extends AnalyzePluginBase {
           '#range_max' => 1,
           '#value' => $gauge_value,
           '#display_value' => sprintf('%+.1f', $score),
+        ];
+      }
+      else {
+        // Show analysis failure message for factors without scores.
+        $build[$factor_id] = [
+          '#theme' => 'analyze_table',
+          '#table_title' => $factor['label'],
+          '#rows' => [
+            [
+              'label' => 'Status',
+              'data' => $this->t('AI analysis failed to generate score. Check logs for details or try again.'),
+            ],
+          ],
         ];
       }
     }
@@ -517,8 +547,15 @@ final class AIContentMarketingAuditAnalyzer extends AnalyzePluginBase {
    */
   private function analyzeQuantitativeFactors(EntityInterface $entity, array $factors, string $content): array {
     try {
+      // Get the AI provider.
       $ai_provider = $this->getAiProvider();
       if (!$ai_provider) {
+        return [];
+      }
+
+      // Get the default model.
+      $defaults = $this->getDefaultModel();
+      if (!$defaults) {
         return [];
       }
 
@@ -558,15 +595,8 @@ EOT;
 
       // Get response.
       $messages = new ChatInput($chat_array);
-      $defaults = $this->getDefaultModel();
-      // Call chat method dynamically since interface may not define it.
-      if (method_exists($ai_provider, 'chat')) {
-        $response = $ai_provider->chat($messages, $defaults['model_id']);
-        $message = $response->getNormalized();
-      }
-      else {
-        return [];
-      }
+      /** @var \Drupal\ai\OperationType\Chat\ChatInterface $ai_provider */
+      $message = $ai_provider->chat($messages, $defaults['model_id'])->getNormalized();
 
       // Use the injected PromptJsonDecoder service.
       $decoded = $this->promptJsonDecoder->decode($message);
@@ -611,8 +641,15 @@ EOT;
    */
   private function analyzeQualitativeFactors(EntityInterface $entity, array $factors, string $content): array {
     try {
+      // Get the AI provider.
       $ai_provider = $this->getAiProvider();
       if (!$ai_provider) {
+        return [];
+      }
+
+      // Get the default model.
+      $defaults = $this->getDefaultModel();
+      if (!$defaults) {
         return [];
       }
 
@@ -650,15 +687,8 @@ EOT;
 
       // Get response.
       $messages = new ChatInput($chat_array);
-      $defaults = $this->getDefaultModel();
-      // Call chat method dynamically since interface may not define it.
-      if (method_exists($ai_provider, 'chat')) {
-        $response = $ai_provider->chat($messages, $defaults['model_id']);
-        $message = $response->getNormalized();
-      }
-      else {
-        return [];
-      }
+      /** @var \Drupal\ai\OperationType\Chat\ChatInterface $ai_provider */
+      $message = $ai_provider->chat($messages, $defaults['model_id'])->getNormalized();
 
       // Use the injected PromptJsonDecoder service.
       $decoded = $this->promptJsonDecoder->decode($message);
