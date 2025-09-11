@@ -255,7 +255,8 @@ final class AIContentMarketingAuditAnalyzer extends AnalyzePluginBase {
       }
     }
 
-    // If no scores available, check if it's a provider issue or analysis failure.
+    // If no scores available, check if it's a provider issue or analysis
+    // failure.
     if (!empty($content = $this->getHtml($entity))) {
       $ai_provider = $this->getAiProvider();
       if (!$ai_provider) {
@@ -301,7 +302,8 @@ final class AIContentMarketingAuditAnalyzer extends AnalyzePluginBase {
       }
     }
 
-    // If no scores available but content exists, check if it's a provider issue or analysis failure.
+    // If no scores available but content exists, check if it's a provider
+    // issue or analysis failure.
     if (empty($scores) && !empty($this->getHtml($entity))) {
       $ai_provider = $this->getAiProvider();
       if (!$ai_provider) {
