@@ -1,4 +1,5 @@
 services:
+  # Updated service definition to match refactored constructor
   analyze_ai_content_marketing_audit.storage:
     class: Drupal\analyze_ai_content_marketing_audit\Service\ContentMarketingAuditStorageService
     arguments: ['@database', '@language_manager', '@config.factory']
