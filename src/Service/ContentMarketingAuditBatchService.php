@@ -51,6 +51,14 @@ final class ContentMarketingAuditBatchService {
         // context.
         ->accessCheck(FALSE);
 
+      if (!$force_refresh) {
+        // Only include entities that need analysis (no valid cache).
+        $analyzed_ids = $this->getAnalyzedEntityIds($entity_type_id, $bundle);
+        if (!empty($analyzed_ids)) {
+          $query->condition($entity_type_id === 'node' ? 'nid' : 'id', $analyzed_ids, 'NOT IN');
+        }
+      }
+
       if ($limit > 0) {
         $remaining = $limit - count($entities);
         if ($remaining <= 0) {
@@ -71,6 +79,38 @@ final class ContentMarketingAuditBatchService {
     }
 
     return $entities;
+  }
+
+  /**
+   * Gets IDs of entities that already have analysis.
+   *
+   * @param string $entity_type_id
+   *   The entity type ID.
+   * @param string $bundle
+   *   The bundle.
+   *
+   * @return array<int, int|string>
+   *   Array of entity IDs that have valid cached analysis.
+   */
+  private function getAnalyzedEntityIds(string $entity_type_id, string $bundle): array {
+    // Get entities that have valid cached analysis.
+    $query = $this->entityTypeManager->getStorage($entity_type_id)->getQuery()
+      // Batch operations should not be access-checked as they run in admin
+      // context.
+      ->accessCheck(FALSE)
+      ->condition('type', $bundle);
+
+    $all_ids = $query->execute();
+    $analyzed_ids = [];
+
+    foreach ($all_ids as $id) {
+      $entity = $this->entityTypeManager->getStorage($entity_type_id)->load($id);
+      if ($entity && !empty($this->storageService->getScores($entity))) {
+        $analyzed_ids[] = $id;
+      }
+    }
+
+    return $analyzed_ids;
   }
 
   /**
