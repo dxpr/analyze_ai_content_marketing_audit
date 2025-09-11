@@ -1,12 +1,12 @@
 # AI Content Marketing Audit
 
-AI-powered content marketing analysis evaluating seven critical
+AI-powered content marketing analysis evaluating five essential
 factors that drive engagement and business results.
 
 ## Features
 
-- **Seven Marketing Factors**: Usability, Knowledge Level, Actionability,
-  Accuracy, Business Value, Messaging, Brand Voice Fit
+- **Five Marketing Factors**: Usability, Knowledge Level, Actionability,
+  Accuracy, Funnel Stage
 - **Dual Analysis**: Quantitative scoring (-1.0 to +1.0) and qualitative
   classification
 - **Configurable Factors**: Add, edit, delete custom audit factors
@@ -61,9 +61,7 @@ drush en analyze_ai_content_marketing_audit
 2. **Knowledge Level**: Expertise demonstration
 3. **Actionability**: Clear next steps provided
 4. **Accuracy**: Factual correctness and currency
-5. **Business Value**: Support for business goals
-6. **Messaging**: Clarity and consistency
-7. **Brand Voice Fit**: Alignment with brand guidelines
+5. **Funnel Stage**: Marketing funnel targeting (Awareness/Consideration/Decision/Retention)
 
 ## Views Integration
 
