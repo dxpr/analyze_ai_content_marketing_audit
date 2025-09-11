@@ -7,6 +7,7 @@ namespace Drupal\analyze_ai_content_marketing_audit\Service;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
+use Drupal\Component\Plugin\PluginManagerInterface;
 
 /**
  * Service for batch processing content marketing audit analysis.
@@ -18,6 +19,7 @@ final class ContentMarketingAuditBatchService {
   public function __construct(
     private readonly EntityTypeManagerInterface $entityTypeManager,
     private readonly ContentMarketingAuditStorageService $storageService,
+    private readonly PluginManagerInterface $analyzePluginManager,
   ) {
   }
 
@@ -42,10 +44,20 @@ final class ContentMarketingAuditBatchService {
 
       $storage = $this->entityTypeManager->getStorage($entity_type_id);
       $query = $storage->getQuery()
-        ->accessCheck(TRUE)
         ->condition('type', $bundle)
-          // Only published content.
-        ->condition('status', 1);
+        // Only published content.
+        ->condition('status', 1)
+        // Batch operations should not be access-checked as they run in admin
+        // context.
+        ->accessCheck(FALSE);
+
+      if (!$force_refresh) {
+        // Only include entities that need analysis (no valid cache).
+        $analyzed_ids = $this->getAnalyzedEntityIds($entity_type_id, $bundle);
+        if (!empty($analyzed_ids)) {
+          $query->condition($entity_type_id === 'node' ? 'nid' : 'id', $analyzed_ids, 'NOT IN');
+        }
+      }
 
       if ($limit > 0) {
         $remaining = $limit - count($entities);
@@ -78,12 +90,14 @@ final class ContentMarketingAuditBatchService {
    *   The bundle.
    *
    * @return array<int, int|string>
-   *   Array of entity IDs.
+   *   Array of entity IDs that have valid cached analysis.
    */
   private function getAnalyzedEntityIds(string $entity_type_id, string $bundle): array {
     // Get entities that have valid cached analysis.
     $query = $this->entityTypeManager->getStorage($entity_type_id)->getQuery()
-      ->accessCheck(TRUE)
+      // Batch operations should not be access-checked as they run in admin
+      // context.
+      ->accessCheck(FALSE)
       ->condition('type', $bundle);
 
     $all_ids = $query->execute();
@@ -117,7 +131,7 @@ final class ContentMarketingAuditBatchService {
       $context['results']['errors'] = [];
     }
 
-    $analyzer = \Drupal::service('plugin.manager.analyze')
+    $analyzer = $this->analyzePluginManager
       ->createInstance('analyze_ai_content_marketing_audit_analyzer');
 
     foreach ($entities as $entity_data) {

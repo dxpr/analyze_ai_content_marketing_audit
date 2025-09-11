@@ -9,6 +9,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\analyze_ai_content_marketing_audit\Service\ContentMarketingAuditBatchService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 
 /**
  * Batch form for content marketing audit analysis.
@@ -17,6 +18,7 @@ final class ContentMarketingAuditBatchForm extends FormBase {
 
   public function __construct(
     private readonly ContentMarketingAuditBatchService $batchService,
+    private readonly EntityTypeBundleInfoInterface $bundleInfo,
   ) {
   }
 
@@ -26,6 +28,7 @@ final class ContentMarketingAuditBatchForm extends FormBase {
   public static function create(ContainerInterface $container): static {
     return new static(
           $container->get('analyze_ai_content_marketing_audit.batch_service'),
+          $container->get('entity_type.bundle.info'),
       );
   }
 
@@ -153,14 +156,14 @@ final class ContentMarketingAuditBatchForm extends FormBase {
    */
   private function getAvailableEntityTypes(): array {
     // Get entity types where content marketing audit analyzer is enabled.
-    $config = \Drupal::config('analyze.settings');
+    $config = $this->config('analyze.settings');
     $status = $config->get('status') ?? [];
 
     $options = [];
     foreach ($status as $entity_type_id => $bundles) {
       foreach ($bundles as $bundle => $analyzers) {
         if (isset($analyzers['analyze_ai_content_marketing_audit_analyzer'])) {
-          $bundle_info = \Drupal::service('entity_type.bundle.info')->getBundleInfo($entity_type_id);
+          $bundle_info = $this->bundleInfo->getBundleInfo($entity_type_id);
           $label = $bundle_info[$bundle]['label'] ?? $bundle;
           $options["{$entity_type_id}:{$bundle}"] = "{$entity_type_id} - {$label}";
         }
