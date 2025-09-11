@@ -40,6 +40,14 @@ final class AddFactorForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state): array {
+    $form['label'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Label'),
+      '#description' => $this->t('The human-readable name for this factor.'),
+      '#required' => TRUE,
+      '#maxlength' => 255,
+    ];
+
     $form['id'] = [
       '#type' => 'machine_name',
       '#title' => $this->t('Factor ID'),
@@ -49,14 +57,6 @@ final class AddFactorForm extends FormBase {
         'exists' => [$this, 'factorExists'],
         'source' => ['label'],
       ],
-    ];
-
-    $form['label'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Label'),
-      '#description' => $this->t('The human-readable name for this factor.'),
-      '#required' => TRUE,
-      '#maxlength' => 255,
     ];
 
     $form['description'] = [
