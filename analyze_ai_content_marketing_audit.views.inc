@@ -71,10 +71,10 @@ function analyze_ai_content_marketing_audit_views_data() {
   $data['analyze_ai_content_marketing_audit_results']['langcode'] = [
     'title' => t('Language'),
     'help' => t('The language of the analyzed content.'),
-    'field' => ['id' => 'standard'],
-    'filter' => ['id' => 'string'],
+    'field' => ['id' => 'language'],
+    'filter' => ['id' => 'language'],
     'sort' => ['id' => 'standard'],
-    'argument' => ['id' => 'string'],
+    'argument' => ['id' => 'language'],
   ];
 
   // Factor ID field.
@@ -82,7 +82,10 @@ function analyze_ai_content_marketing_audit_views_data() {
     'title' => t('Factor Type'),
     'help' => t('The marketing factor identifier (e.g., "usability", "accuracy").'),
     'field' => ['id' => 'standard'],
-    'filter' => ['id' => 'string'],
+    'filter' => [
+      'id' => 'analyze_select',
+      'options_callback' => 'analyze_ai_content_marketing_audit.storage:getFactorSelectOptions',
+    ],
     'sort' => ['id' => 'standard'],
     'argument' => ['id' => 'string'],
     'relationship' => [
