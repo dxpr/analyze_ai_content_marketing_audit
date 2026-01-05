@@ -185,6 +185,21 @@ final class ContentMarketingAuditStorageService {
   }
 
   /**
+   * Gets factor options for Views select filter.
+   *
+   * @return array<string, string>
+   *   Array of factor labels keyed by factor ID.
+   */
+  public function getFactorSelectOptions(): array {
+    $factors = $this->getFactors();
+    $options = [];
+    foreach ($factors as $factor_id => $factor_data) {
+      $options[$factor_id] = $factor_data['label'] ?? $factor_id;
+    }
+    return $options;
+  }
+
+  /**
    * Gets the options for a qualitative factor.
    *
    * @param string $factor_id
