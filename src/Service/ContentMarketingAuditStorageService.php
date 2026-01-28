@@ -91,30 +91,18 @@ final class ContentMarketingAuditStorageService {
    *   The score to save.
    */
   public function saveScore(EntityInterface $entity, string $factor_id, float $score): void {
-    $content_hash = $this->generateContentHash($entity);
-    $config_hash = $this->generateConfigHash();
-
-    // Delete existing records for this entity/factor/content/config combo.
-    $this->database->delete('analyze_ai_content_marketing_audit_results')
-      ->condition('entity_type', $entity->getEntityTypeId())
-      ->condition('entity_id', $entity->id())
-      ->condition('langcode', $entity->language()->getId())
-      ->condition('factor_id', $factor_id)
-      ->condition('content_hash', $content_hash)
-      ->condition('config_hash', $config_hash)
-      ->execute();
-
-    // Insert new record.
-    $this->database->insert('analyze_ai_content_marketing_audit_results')
-      ->fields([
+    $this->database->merge('analyze_ai_content_marketing_audit_results')
+      ->keys([
         'entity_type' => $entity->getEntityTypeId(),
         'entity_id' => $entity->id(),
-        'entity_revision_id' => method_exists($entity, 'getRevisionId') ? $entity->getRevisionId() : NULL,
-        'langcode' => $entity->language()->getId(),
         'factor_id' => $factor_id,
+        'langcode' => $entity->language()->getId(),
+      ])
+      ->fields([
+        'entity_revision_id' => method_exists($entity, 'getRevisionId') ? $entity->getRevisionId() : 0,
         'score' => $score,
-        'content_hash' => $content_hash,
-        'config_hash' => $config_hash,
+        'content_hash' => $this->generateContentHash($entity),
+        'config_hash' => $this->generateConfigHash(),
         'analyzed_timestamp' => time(),
       ])
       ->execute();
