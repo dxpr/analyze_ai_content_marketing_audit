@@ -190,25 +190,7 @@ function analyze_ai_content_marketing_audit_install() {
       'type' => 'quantitative',
       'weight' => 3,
     ],
-    'business_value' => [
-      'label' => 'Business Value',
-      'description' => 'How well does the content support business goals and provide value to stakeholders?',
-      'type' => 'quantitative',
-      'weight' => 4,
-    ],
-    'messaging' => [
-      'label' => 'Messaging',
-      'description' => 'How clear, compelling, and consistent is the messaging?',
-      'type' => 'quantitative',
-      'weight' => 5,
-    ],
-    'brand_voice_fit' => [
-      'label' => 'Brand Voice Fit',
-      'description' => 'How well does the content align with the brand voice and tone guidelines?',
-      'type' => 'quantitative',
-      'weight' => 6,
-    ],
-      // Qualitative factors (categorical classification)
+    // Qualitative factors (categorical classification)
     'funnel_stage' => [
       'label' => 'Funnel Stage',
       'description' => 'Which stage of the marketing funnel does this content primarily target?',
