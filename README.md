@@ -1,4 +1,4 @@
-# AI Content Marketing Audit
+# AI Content Marketing Audit :)
 
 AI-powered content marketing analysis evaluating seven critical
 factors that drive engagement and business results.
