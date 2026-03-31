@@ -43,19 +43,30 @@ final class ContentMarketingAuditBatchService {
       [$entity_type_id, $bundle] = explode(':', $entity_bundle);
 
       $storage = $this->entityTypeManager->getStorage($entity_type_id);
+      $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
       $query = $storage->getQuery()
-        ->condition('type', $bundle)
-        // Only published content.
-        ->condition('status', 1)
         // Batch operations should not be access-checked as they run in admin
         // context.
         ->accessCheck(FALSE);
+
+      // Use the entity type's bundle key.
+      $bundle_key = $entity_type->getKey('bundle');
+      if ($bundle_key) {
+        $query->condition($bundle_key, $bundle);
+      }
+
+      // Only include published content if the entity type has a status key.
+      $status_key = $entity_type->getKey('status');
+      if ($status_key) {
+        $query->condition($status_key, 1);
+      }
 
       if (!$force_refresh) {
         // Only include entities that need analysis (no valid cache).
         $analyzed_ids = $this->getAnalyzedEntityIds($entity_type_id, $bundle);
         if (!empty($analyzed_ids)) {
-          $query->condition($entity_type_id === 'node' ? 'nid' : 'id', $analyzed_ids, 'NOT IN');
+          $id_key = $entity_type->getKey('id');
+          $query->condition($id_key, $analyzed_ids, 'NOT IN');
         }
       }
 
@@ -94,11 +105,17 @@ final class ContentMarketingAuditBatchService {
    */
   private function getAnalyzedEntityIds(string $entity_type_id, string $bundle): array {
     // Get entities that have valid cached analysis.
+    $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
     $query = $this->entityTypeManager->getStorage($entity_type_id)->getQuery()
       // Batch operations should not be access-checked as they run in admin
       // context.
-      ->accessCheck(FALSE)
-      ->condition('type', $bundle);
+      ->accessCheck(FALSE);
+
+    // Use the entity type's bundle key.
+    $bundle_key = $entity_type->getKey('bundle');
+    if ($bundle_key) {
+      $query->condition($bundle_key, $bundle);
+    }
 
     $all_ids = $query->execute();
     $analyzed_ids = [];
