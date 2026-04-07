@@ -148,8 +148,12 @@ final class AIContentMarketingAuditAnalyzer extends AnalyzePluginBase implements
     if ($force_refresh) {
       $this->storage->deleteScores($entity);
     }
-    $this->renderSummary($entity);
-    return TRUE;
+    $scores = $this->analyzeContentMarketingAudit($entity);
+    if (!empty($scores)) {
+      $this->saveScores($entity, $scores);
+      return TRUE;
+    }
+    return FALSE;
   }
 
   /**

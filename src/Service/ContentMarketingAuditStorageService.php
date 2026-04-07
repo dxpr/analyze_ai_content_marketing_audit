@@ -305,8 +305,7 @@ final class ContentMarketingAuditStorageService {
       }
 
       return hash('sha256', $content . $entity->getEntityTypeId() . $entity->id() . $entity->language()->getId());
-    }
-    finally {
+    } finally {
       $this->languageManager->setConfigOverrideLanguage($this->languageManager->getLanguage($current_language));
     }
   }
