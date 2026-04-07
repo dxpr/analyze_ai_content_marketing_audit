@@ -4,6 +4,7 @@ namespace Drupal\analyze_ai_content_marketing_audit\Plugin\Analyze;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\analyze\AnalyzePluginBase;
+use Drupal\analyze\BatchableAnalyzerInterface;
 use Drupal\ai\AiProviderPluginManager;
 use Drupal\ai\OperationType\Chat\ChatInput;
 use Drupal\ai\OperationType\Chat\ChatMessage;
@@ -26,7 +27,7 @@ use Drupal\analyze_ai_content_marketing_audit\Service\ContentMarketingAuditStora
  *   description = @Translation("Analyzes content marketing factors using AI.")
  * )
  */
-final class AIContentMarketingAuditAnalyzer extends AnalyzePluginBase {
+final class AIContentMarketingAuditAnalyzer extends AnalyzePluginBase implements BatchableAnalyzerInterface {
   /**
    * The AI provider manager.
    *
@@ -134,6 +135,27 @@ final class AIContentMarketingAuditAnalyzer extends AnalyzePluginBase {
           $container->get('ai.prompt_json_decode'),
           $container->get('analyze_ai_content_marketing_audit.storage'),
       );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function processEntity(EntityInterface $entity, bool $force_refresh = FALSE): bool {
+    if (!$force_refresh && $this->hasResults($entity)) {
+      return FALSE;
+    }
+    if ($force_refresh) {
+      $this->storage->deleteScores($entity);
+    }
+    $this->renderSummary($entity);
+    return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasResults(EntityInterface $entity): bool {
+    return !empty($this->storage->getScores($entity));
   }
 
   /**

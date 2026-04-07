@@ -42,10 +42,16 @@ drush en analyze_ai_content_marketing_audit
 - **Delete factors**: Removes factor and all associated results
 
 ### Batch Processing
-1. Go to `/admin/config/analyze/content-marketing-audit/batch`
-2. Select content types and processing limits
-3. Choose whether to force re-analysis
-4. Monitor progress and server resources
+
+Batch analysis is available through the centralized Analyze batch system:
+
+- **Admin UI**: Navigate to Administration > Configuration > Content > Batch
+  Analysis (`/admin/config/content/analyze-batch`), select "AI Content Marketing
+  Audit" and your desired content types.
+- **Drush CLI**: `drush analyze:batch --analyzers=analyze_ai_content_marketing_audit_analyzer`
+
+See the [Analyze module documentation](https://www.drupal.org/project/analyze)
+for full batch command options including `--types`, `--limit`, and `--force`.
 
 ## Analysis
 
