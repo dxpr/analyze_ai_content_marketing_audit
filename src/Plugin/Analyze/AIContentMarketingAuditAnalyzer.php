@@ -2,6 +2,7 @@
 
 namespace Drupal\analyze_ai_content_marketing_audit\Plugin\Analyze;
 
+use Drupal\ai\Exception\AiRateLimitException;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\analyze\AnalyzePluginBase;
 use Drupal\analyze\BatchableAnalyzerInterface;
@@ -156,6 +157,13 @@ final class AIContentMarketingAuditAnalyzer extends AnalyzePluginBase implements
    */
   public function hasResults(EntityInterface $entity): bool {
     return !empty($this->storage->getScores($entity));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function countAnalyzedEntities(string $entity_type_id, string $bundle): int {
+    return $this->storage->countAnalyzedEntities($entity_type_id, $bundle);
   }
 
   /**
@@ -642,7 +650,7 @@ EOT;
 
       return $scores;
     }
-    catch (\Drupal\ai\Exception\AiRateLimitException $e) {
+    catch (AiRateLimitException $e) {
       throw $e;
     }
     catch (\Exception $e) {
@@ -742,7 +750,7 @@ EOT;
 
       return $classifications;
     }
-    catch (\Drupal\ai\Exception\AiRateLimitException $e) {
+    catch (AiRateLimitException $e) {
       throw $e;
     }
     catch (\Exception $e) {
