@@ -642,6 +642,9 @@ EOT;
 
       return $scores;
     }
+    catch (\Drupal\ai\Exception\AiRateLimitException $e) {
+      throw $e;
+    }
     catch (\Exception $e) {
       $this->messenger->addError($this->t('Quantitative factor analysis failed: @message', [
         '@message' => $e->getMessage(),
@@ -738,6 +741,9 @@ EOT;
       }
 
       return $classifications;
+    }
+    catch (\Drupal\ai\Exception\AiRateLimitException $e) {
+      throw $e;
     }
     catch (\Exception $e) {
       $this->messenger->addError($this->t('Qualitative factor analysis failed: @message', [
