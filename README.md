@@ -41,17 +41,25 @@ drush en analyze_ai_content_marketing_audit
 - **Edit factors**: Modify existing factors (ID cannot be changed)
 - **Delete factors**: Removes factor and all associated results
 
+## CLI & AI Agent Support
+
 ### Batch Processing
 
-Batch analysis is available through the centralized Analyze batch system:
+Batch analysis is available through the centralized Analyze
+batch system:
 
-- **Admin UI**: Navigate to Administration > Configuration > Content > Batch
-  Analysis (`/admin/config/content/analyze-batch`), select "AI Content Marketing
-  Audit" and your desired content types.
-- **Drush CLI**: `drush analyze:batch --analyzers=analyze_ai_content_marketing_audit_analyzer`
+- **Admin UI**: Administration > Configuration > Content >
+  Batch Analysis (`/admin/config/content/analyze-batch`)
+- **Drush CLI**:
+  `drush analyze:batch --analyzers=analyze_ai_content_marketing_audit_analyzer`
 
-See the [Analyze module documentation](https://www.drupal.org/project/analyze)
-for full batch command options including `--types`, `--limit`, and `--force`.
+See the [Analyze module](https://www.drupal.org/project/analyze)
+for full batch command options.
+
+### AI Agent Integration
+
+AI agents can access marketing audit analysis through the centralized
+Analyze skill files. Install with `drush analyze:setup-ai`.
 
 ## Analysis
 
