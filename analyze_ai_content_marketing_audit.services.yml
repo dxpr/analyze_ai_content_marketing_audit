@@ -3,7 +3,3 @@ services:
   analyze_ai_content_marketing_audit.storage:
     class: Drupal\analyze_ai_content_marketing_audit\Service\ContentMarketingAuditStorageService
     arguments: ['@database', '@language_manager', '@config.factory']
-
-  analyze_ai_content_marketing_audit.batch_service:
-    class: Drupal\analyze_ai_content_marketing_audit\Service\ContentMarketingAuditBatchService
-    arguments: ['@entity_type.manager', '@analyze_ai_content_marketing_audit.storage', '@plugin.manager.analyze']

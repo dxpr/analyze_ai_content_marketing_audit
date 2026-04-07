@@ -305,7 +305,8 @@ final class ContentMarketingAuditStorageService {
       }
 
       return hash('sha256', $content . $entity->getEntityTypeId() . $entity->id() . $entity->language()->getId());
-    } finally {
+    }
+    finally {
       $this->languageManager->setConfigOverrideLanguage($this->languageManager->getLanguage($current_language));
     }
   }
@@ -325,6 +326,28 @@ final class ContentMarketingAuditStorageService {
     ];
 
     return md5(serialize($config_data));
+  }
+
+  /**
+   * Counts the number of analyzed entities for a given type and bundle.
+   *
+   * @param string $entity_type_id
+   *   The entity type ID.
+   * @param string $bundle
+   *   The bundle.
+   *
+   * @return int
+   *   The count of analyzed entities.
+   */
+  public function countAnalyzedEntities(string $entity_type_id, string $bundle): int {
+    $query = $this->database->select('analyze_ai_content_marketing_audit_results', 'r');
+    $query->condition('r.entity_type', $entity_type_id);
+    if ($entity_type_id === 'node') {
+      $query->join('node_field_data', 'n', 'r.entity_id = n.nid AND r.entity_type = :type', [':type' => 'node']);
+      $query->condition('n.type', $bundle);
+    }
+    $query->addExpression('COUNT(DISTINCT r.entity_id)');
+    return (int) $query->execute()->fetchField();
   }
 
 }

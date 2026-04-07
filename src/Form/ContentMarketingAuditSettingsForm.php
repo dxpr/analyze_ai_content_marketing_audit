@@ -99,11 +99,11 @@ final class ContentMarketingAuditSettingsForm extends FormBase {
           $this->t('Operations'),
         ],
         '#tabledrag' => [
-        [
-          'action' => 'order',
-          'relationship' => 'sibling',
-          'group' => 'quantitative-factor-weight',
-        ],
+          [
+            'action' => 'order',
+            'relationship' => 'sibling',
+            'group' => 'quantitative-factor-weight',
+          ],
         ],
         '#empty' => $this->t('No quantitative factors available.'),
       ];
@@ -129,11 +129,11 @@ final class ContentMarketingAuditSettingsForm extends FormBase {
           $this->t('Operations'),
         ],
         '#tabledrag' => [
-        [
-          'action' => 'order',
-          'relationship' => 'sibling',
-          'group' => 'qualitative-factor-weight',
-        ],
+          [
+            'action' => 'order',
+            'relationship' => 'sibling',
+            'group' => 'qualitative-factor-weight',
+          ],
         ],
         '#empty' => $this->t('No qualitative factors available.'),
       ];
