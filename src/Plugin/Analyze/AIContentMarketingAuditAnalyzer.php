@@ -200,10 +200,10 @@ final class AIContentMarketingAuditAnalyzer extends AnalyzePluginBase implements
       '#theme' => 'analyze_table',
       '#table_title' => 'Content Marketing Audit',
       '#rows' => [
-      [
-        'label' => 'Status',
-        'data' => $message,
-      ],
+        [
+          'label' => 'Status',
+          'data' => $message,
+        ],
       ],
     ];
   }
@@ -253,10 +253,10 @@ final class AIContentMarketingAuditAnalyzer extends AnalyzePluginBase implements
           '#theme' => 'analyze_table',
           '#table_title' => $factor['label'],
           '#rows' => [
-          [
-            'label' => 'Classification',
-            'data' => $classification,
-          ],
+            [
+              'label' => 'Classification',
+              'data' => $classification,
+            ],
           ],
         ];
       }
