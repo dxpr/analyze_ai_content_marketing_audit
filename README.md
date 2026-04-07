@@ -41,25 +41,35 @@ drush en analyze_ai_content_marketing_audit
 - **Edit factors**: Modify existing factors (ID cannot be changed)
 - **Delete factors**: Removes factor and all associated results
 
-## CLI & AI Agent Support
+## AI Coding Assistant Integration
 
-### Batch Processing
+The Content Marketing Audit module includes a built-in
+[Agent Skills](https://agentskills.io) file (via the base
+Analyze module) that teaches AI coding assistants how to run
+marketing audit analysis through natural language. Run
+`drush analyze:setup-ai` to enable, then ask naturally:
 
-Batch analysis is available through the centralized Analyze
+```
+"Audit content marketing quality on all articles"
+"Check the usability and actionability scores for landing pages"
+"Run a marketing audit on all published content"
+"Analyze business value across the blog section"
+```
+
+Batch processing is available via the centralized Analyze
 batch system:
 
-- **Admin UI**: Administration > Configuration > Content >
-  Batch Analysis (`/admin/config/content/analyze-batch`)
-- **Drush CLI**:
-  `drush analyze:batch --analyzers=analyze_ai_content_marketing_audit_analyzer`
+```bash
+drush analyze:batch \
+  --analyzers=analyze_ai_content_marketing_audit_analyzer
+drush analyze:batch \
+  --analyzers=analyze_ai_content_marketing_audit_analyzer \
+  --types=node:article --force
+```
 
-See the [Analyze module](https://www.drupal.org/project/analyze)
-for full batch command options.
-
-### AI Agent Integration
-
-AI agents can access marketing audit analysis through the centralized
-Analyze skill files. Install with `drush analyze:setup-ai`.
+Compatible with Claude Code, Codex CLI, Gemini CLI, GitHub
+Copilot, Cursor, and other tools supporting the
+[Agent Skills standard](https://agentskills.io/specification).
 
 ## Analysis
 
