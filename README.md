@@ -1,4 +1,8 @@
-# AI Content Marketing Audit
+> Part of [DXPR CMS](https://dxpr.com/c/marketing-cms): The AI-Powered Drupal CMS
+>
+> [Documentation](https://dxpr.com/docs) | [Try Free](https://dxpr.com/try) | [dxpr.com](https://dxpr.com)
+
+# AI Content Marketing Audit: AI-Powered Content Marketing Quality Scoring for Drupal
 
 AI-powered content marketing analysis evaluating seven critical
 factors that drive engagement and business results.
@@ -143,3 +147,10 @@ $score = $analyzer->analyze($entity, 'messaging');
 - Cache invalidation is automatic
 - Only re-analyzes when content/config changes
 - Use reasonable batch sizes (50-100 entities)
+
+## Related DXPR Modules
+
+- [Analyze](https://www.drupal.org/project/analyze)
+- [AI Brand Voice Analysis](https://www.drupal.org/project/analyze_ai_brand_voice)
+- [AI Content Strategy](https://www.drupal.org/project/ai_content_strategy)
+- [Analyze Search Console](https://www.drupal.org/project/analyze_search_console)
