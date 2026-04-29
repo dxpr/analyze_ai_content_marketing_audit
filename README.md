@@ -153,9 +153,9 @@ $score = $analyzer->analyze($entity, 'messaging');
 
 ## Related Modules
 
-- [Analyze](https://www.drupal.org/project/analyze)
-- [AI Brand Voice Analysis](https://www.drupal.org/project/analyze_ai_brand_voice)
-- [AI Content Strategy](https://www.drupal.org/project/ai_content_strategy)
-- [Analyze Search Console](https://www.drupal.org/project/analyze_search_console)
-- [AI](https://www.drupal.org/project/ai) - Artificial Intelligence integration for Drupal
-- [Google Tag](https://www.drupal.org/project/google_tag) - Google Tag Manager integration
+- [Analyze](https://www.drupal.org/project/analyze) - Required. Provides the plugin framework and Analyze tab this module extends
+- [AI](https://www.drupal.org/project/ai) - Required. Supplies the LLM provider used for scoring content against marketing factors
+- [Views Color Scales](https://www.drupal.org/project/views_color_scales) - Required. Renders color-coded score columns in the marketing audit Views report
+- [AI Content Security Audit](https://www.drupal.org/project/analyze_ai_content_security_audit) - Sibling Analyze plugin that detects PII and credential leaks
+- [AI Sentiments Analysis](https://www.drupal.org/project/analyze_ai_sentiments) - Sibling Analyze plugin that measures tone, trust, and reading level
+- [Analyze Broken Links](https://www.drupal.org/project/analyze_broken_links) - Sibling Analyze plugin that checks link health without AI
