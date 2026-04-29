@@ -1,6 +1,9 @@
-> Part of [DXPR CMS](https://dxpr.com/c/marketing-cms): The AI-Powered Drupal CMS
+> **Analyze AI Content Marketing Audit** is a Drupal module by [DXPR](https://dxpr.com) that
+> evaluates your Drupal content's marketing effectiveness using AI, scoring pages on conversion optimization, audience targeting, and engagement potential. An [Analyze](https://www.drupal.org/project/analyze) plugin by [DXPR](https://dxpr.com).
 >
-> [Documentation](https://dxpr.com/docs) | [Try Free](https://dxpr.com/try) | [dxpr.com](https://dxpr.com)
+> [Getting Started](https://dxpr.com/c/getting-started) |
+> [Pricing](https://dxpr.com/pricing) |
+> [Try Free Demo](https://dxpr.com/try)
 
 # AI Content Marketing Audit: AI-Powered Content Marketing Quality Scoring for Drupal
 
@@ -148,9 +151,11 @@ $score = $analyzer->analyze($entity, 'messaging');
 - Only re-analyzes when content/config changes
 - Use reasonable batch sizes (50-100 entities)
 
-## Related DXPR Modules
+## Related Modules
 
 - [Analyze](https://www.drupal.org/project/analyze)
 - [AI Brand Voice Analysis](https://www.drupal.org/project/analyze_ai_brand_voice)
 - [AI Content Strategy](https://www.drupal.org/project/ai_content_strategy)
 - [Analyze Search Console](https://www.drupal.org/project/analyze_search_console)
+- [AI](https://www.drupal.org/project/ai) - Artificial Intelligence integration for Drupal
+- [Google Tag](https://www.drupal.org/project/google_tag) - Google Tag Manager integration
