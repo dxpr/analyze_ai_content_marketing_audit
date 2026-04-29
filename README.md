@@ -1,4 +1,11 @@
-# AI Content Marketing Audit
+> **Analyze AI Content Marketing Audit** is a Drupal module by [DXPR](https://dxpr.com) that
+> evaluates your Drupal content's marketing effectiveness using AI, scoring pages on conversion optimization, audience targeting, and engagement potential. An [Analyze](https://www.drupal.org/project/analyze) plugin by [DXPR](https://dxpr.com).
+>
+> [Getting Started](https://dxpr.com/c/getting-started) |
+> [Pricing](https://dxpr.com/pricing) |
+> [Try Free Demo](https://dxpr.com/try)
+
+# AI Content Marketing Audit: AI-Powered Content Marketing Quality Scoring for Drupal
 
 AI-powered content marketing analysis evaluating seven critical
 factors that drive engagement and business results.
@@ -143,3 +150,12 @@ $score = $analyzer->analyze($entity, 'messaging');
 - Cache invalidation is automatic
 - Only re-analyzes when content/config changes
 - Use reasonable batch sizes (50-100 entities)
+
+## Related Modules
+
+- [Analyze](https://www.drupal.org/project/analyze) - Required. Provides the plugin framework and Analyze tab this module extends
+- [AI](https://www.drupal.org/project/ai) - Required. Supplies the LLM provider used for scoring content against marketing factors
+- [Views Color Scales](https://www.drupal.org/project/views_color_scales) - Required. Renders color-coded score columns in the marketing audit Views report
+- [AI Content Security Audit](https://www.drupal.org/project/analyze_ai_content_security_audit) - Sibling Analyze plugin that detects PII and credential leaks
+- [AI Sentiments Analysis](https://www.drupal.org/project/analyze_ai_sentiments) - Sibling Analyze plugin that measures tone, trust, and reading level
+- [Analyze Broken Links](https://www.drupal.org/project/analyze_broken_links) - Sibling Analyze plugin that checks link health without AI
