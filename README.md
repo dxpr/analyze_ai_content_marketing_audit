@@ -1,9 +1,9 @@
 > **Analyze AI Content Marketing Audit** is a Drupal module by [DXPR](https://dxpr.com) that
 > evaluates your Drupal content's marketing effectiveness using AI, scoring pages on conversion optimization, audience targeting, and engagement potential. An [Analyze](https://www.drupal.org/project/analyze) plugin by [DXPR](https://dxpr.com).
 >
-> [Getting Started](https://dxpr.com/c/getting-started) |
+> [Getting Started](https://dxpr.com/c/marketing-cms) |
 > [Pricing](https://dxpr.com/pricing) |
-> [Try Free Demo](https://dxpr.com/try)
+> [Try Free Demo](https://try.dxpr.com)
 
 # AI Content Marketing Audit: AI-Powered Content Marketing Quality Scoring for Drupal
 
