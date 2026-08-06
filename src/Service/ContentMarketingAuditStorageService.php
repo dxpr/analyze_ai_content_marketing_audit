@@ -18,9 +18,9 @@ final class ContentMarketingAuditStorageService {
   use DependencySerializationTrait;
 
   public function __construct(
-    private readonly Connection $database,
-    private readonly LanguageManagerInterface $languageManager,
-    private readonly ConfigFactoryInterface $configFactory,
+    protected readonly Connection $database,
+    protected readonly LanguageManagerInterface $languageManager,
+    protected readonly ConfigFactoryInterface $configFactory,
   ) {
   }
 
