@@ -149,7 +149,11 @@ final class ContentMarketingAuditStorageService {
       $query->condition('type', $type);
     }
 
-    return $query->execute()->fetchAllAssoc('id', \PDO::FETCH_ASSOC);
+    $factors = [];
+    foreach ($query->execute() as $row) {
+      $factors[$row->id] = (array) $row;
+    }
+    return $factors;
   }
 
   /**
