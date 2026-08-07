@@ -18,15 +18,15 @@ final class DeleteFactorForm extends ConfirmFormBase {
   /**
    * The factor to be deleted.
    */
-  private ?array $factor = NULL;
+  protected ?array $factor = NULL;
 
   /**
    * The ID of the factor to be deleted.
    */
-  private ?string $factorId = NULL;
+  protected ?string $factorId = NULL;
 
   public function __construct(
-    private readonly ContentMarketingAuditStorageService $storageService,
+    protected readonly ContentMarketingAuditStorageService $storageService,
   ) {
   }
 

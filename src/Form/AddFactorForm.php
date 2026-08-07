@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 final class AddFactorForm extends FormBase {
 
   public function __construct(
-    private readonly ContentMarketingAuditStorageService $storageService,
+    protected readonly ContentMarketingAuditStorageService $storageService,
   ) {
   }
 
