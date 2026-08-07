@@ -18,7 +18,7 @@ function analyze_ai_content_marketing_audit_views_color_scale_popover_alter(arra
   }
   $content = [
     '#theme' => 'analyze_gauge',
-    '#caption' => '',
+    '#caption' => $context['field_options']['label'] ?? '',
     '#range_min_label' => t('Poor'),
     '#range_mid_label' => t('Average'),
     '#range_max_label' => t('Excellent'),
