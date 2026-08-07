@@ -17,8 +17,8 @@ use Drupal\Core\Session\AccountProxyInterface;
 final class ContentMarketingAuditSettingsForm extends FormBase {
 
   public function __construct(
-    private readonly ContentMarketingAuditStorageService $storageService,
-    private readonly AccountProxyInterface $currentUser,
+    protected readonly ContentMarketingAuditStorageService $storageService,
+    protected readonly AccountProxyInterface $currentUser,
   ) {
   }
 

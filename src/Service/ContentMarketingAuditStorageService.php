@@ -18,9 +18,9 @@ final class ContentMarketingAuditStorageService {
   use DependencySerializationTrait;
 
   public function __construct(
-    private readonly Connection $database,
-    private readonly LanguageManagerInterface $languageManager,
-    private readonly ConfigFactoryInterface $configFactory,
+    protected readonly Connection $database,
+    protected readonly LanguageManagerInterface $languageManager,
+    protected readonly ConfigFactoryInterface $configFactory,
   ) {
   }
 
@@ -149,7 +149,11 @@ final class ContentMarketingAuditStorageService {
       $query->condition('type', $type);
     }
 
-    return $query->execute()->fetchAllAssoc('id', \PDO::FETCH_ASSOC);
+    $factors = [];
+    foreach ($query->execute() as $row) {
+      $factors[$row->id] = (array) $row;
+    }
+    return $factors;
   }
 
   /**
