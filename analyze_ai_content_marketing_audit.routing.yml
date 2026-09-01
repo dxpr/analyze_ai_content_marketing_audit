@@ -4,7 +4,7 @@ analyze_ai_content_marketing_audit.settings:
     _form: 'Drupal\analyze_ai_content_marketing_audit\Form\ContentMarketingAuditSettingsForm'
     _title: 'Content Marketing Audit Settings'
   requirements:
-    _permission: 'administer analyze settings'
+    _permission: 'administer analyze'
 
 analyze_ai_content_marketing_audit.factor.add:
   path: '/admin/config/analyze/content-marketing-audit/factor/add'
@@ -12,7 +12,7 @@ analyze_ai_content_marketing_audit.factor.add:
     _form: 'Drupal\analyze_ai_content_marketing_audit\Form\AddFactorForm'
     _title: 'Add Content Marketing Audit Factor'
   requirements:
-    _permission: 'administer analyze settings'
+    _permission: 'administer analyze'
 
 analyze_ai_content_marketing_audit.factor.edit:
   path: '/admin/config/analyze/content-marketing-audit/factor/{factor_id}/edit'
@@ -20,7 +20,7 @@ analyze_ai_content_marketing_audit.factor.edit:
     _form: 'Drupal\analyze_ai_content_marketing_audit\Form\EditFactorForm'
     _title: 'Edit Content Marketing Audit Factor'
   requirements:
-    _permission: 'administer analyze settings'
+    _permission: 'administer analyze'
 
 analyze_ai_content_marketing_audit.factor.delete:
   path: '/admin/config/analyze/content-marketing-audit/factor/{factor_id}/delete'
@@ -28,4 +28,4 @@ analyze_ai_content_marketing_audit.factor.delete:
     _form: 'Drupal\analyze_ai_content_marketing_audit\Form\DeleteFactorForm'
     _title: 'Delete Content Marketing Audit Factor'
   requirements:
-    _permission: 'administer analyze settings'
+    _permission: 'administer analyze'

@@ -203,7 +203,7 @@ final class AIContentMarketingAuditAnalyzer extends AnalyzePluginBase implements
   private function createStatusTable(string $message): array {
     // If this is the AI provider message and user has permission,
     // append the settings link.
-    if ($message === 'No chat AI provider is configured for content marketing audit analysis.' && $this->currentUser->hasPermission('administer analyze settings')) {
+    if ($message === 'No chat AI provider is configured for content marketing audit analysis.' && $this->currentUser->hasPermission('administer analyze')) {
       $link = Link::createFromRoute($this->t('Configure AI provider'), 'ai.settings_form');
       $message = $this->t('No chat AI provider is configured for content marketing audit analysis. @link to set up AI services for marketing analysis.', ['@link' => $link->toString()]);
     }
