@@ -154,7 +154,7 @@ final class EditFactorForm extends FormBase {
     // Validate options for qualitative factors.
     $type = $form_state->getValue('type');
     if ($type === 'qualitative') {
-      $options_text = trim($form_state->getValue('options', ''));
+      $options_text = trim($form_state->getValue('options', ''), " \n\r\t\v\x00");
       if (empty($options_text)) {
         $form_state->setErrorByName('options', $this->t('Discrete options are required for qualitative factors.'));
       }
