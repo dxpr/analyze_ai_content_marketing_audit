@@ -7,6 +7,8 @@ services:
   Drupal\analyze_ai_content_marketing_audit\Hook\AnalyzeAiContentMarketingAuditHooks:
     class: Drupal\analyze_ai_content_marketing_audit\Hook\AnalyzeAiContentMarketingAuditHooks
     autowire: true
+    arguments:
+      - '@current_user'
 
   Drupal\analyze_ai_content_marketing_audit\Hook\AnalyzeAiContentMarketingAuditViewsHooks:
     class: Drupal\analyze_ai_content_marketing_audit\Hook\AnalyzeAiContentMarketingAuditViewsHooks

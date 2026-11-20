@@ -2,6 +2,8 @@
 
 namespace Drupal\analyze_ai_content_marketing_audit\Hook;
 
+use Drupal\Core\Session\AccountProxyInterface;
+
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\views\ViewExecutable;
@@ -13,6 +15,13 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
  */
 class AnalyzeAiContentMarketingAuditHooks {
   use StringTranslationTrait;
+
+  /**
+   * Constructs the hook service.
+   */
+  public function __construct(
+    protected AccountProxyInterface $currentUser,
+  ) {}
 
   /**
    * Implements hook_views_color_scale_popover_alter().
@@ -59,7 +68,7 @@ class AnalyzeAiContentMarketingAuditHooks {
     // Add settings link to the content marketing audit view header.
     if ($view->id() === 'ai_content_marketing_audit_results' && $display_id === 'page_1') {
       // Build the settings link if user has permission.
-      $current_user = \Drupal::currentUser();
+      $current_user = $this->currentUser;
       if ($current_user->hasPermission('administer analyze')) {
         $settings_url = Url::fromRoute('analyze_ai_content_marketing_audit.settings');
         if ($settings_url->access()) {
