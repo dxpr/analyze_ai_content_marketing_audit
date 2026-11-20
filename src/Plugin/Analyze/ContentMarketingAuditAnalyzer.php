@@ -2,6 +2,7 @@
 
 namespace Drupal\analyze_ai_content_marketing_audit\Plugin\Analyze;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\analyze\AnalyzePluginBase;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -22,6 +23,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   description = @Translation("Analyzes content marketing factors.")
  * )
  */
+#[\Drupal\analyze\Attribute\Analyze(
+  id: "analyze_content_marketing_audit_analyzer",
+  label: new TranslatableMarkup("Content Marketing Audit"),
+  description: new TranslatableMarkup("Analyzes content marketing factors."),
+)]
 final class ContentMarketingAuditAnalyzer extends AnalyzePluginBase {
 
   /**

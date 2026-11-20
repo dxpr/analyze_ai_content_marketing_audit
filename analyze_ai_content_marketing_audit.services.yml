@@ -3,3 +3,13 @@ services:
   analyze_ai_content_marketing_audit.storage:
     class: Drupal\analyze_ai_content_marketing_audit\Service\ContentMarketingAuditStorageService
     arguments: ['@database', '@language_manager', '@config.factory']
+
+  Drupal\analyze_ai_content_marketing_audit\Hook\AnalyzeAiContentMarketingAuditHooks:
+    class: Drupal\analyze_ai_content_marketing_audit\Hook\AnalyzeAiContentMarketingAuditHooks
+    autowire: true
+    arguments:
+      - '@current_user'
+
+  Drupal\analyze_ai_content_marketing_audit\Hook\AnalyzeAiContentMarketingAuditViewsHooks:
+    class: Drupal\analyze_ai_content_marketing_audit\Hook\AnalyzeAiContentMarketingAuditViewsHooks
+    autowire: true

@@ -2,6 +2,7 @@
 
 namespace Drupal\analyze_ai_content_marketing_audit\Plugin\Analyze;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\ai\Exception\AiRateLimitException;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\analyze\AnalyzePluginBase;
@@ -28,6 +29,11 @@ use Drupal\analyze_ai_content_marketing_audit\Service\ContentMarketingAuditStora
  *   description = @Translation("Analyzes content marketing factors using AI.")
  * )
  */
+#[\Drupal\analyze\Attribute\Analyze(
+  id: "analyze_ai_content_marketing_audit_analyzer",
+  label: new TranslatableMarkup("AI Content Marketing Audit"),
+  description: new TranslatableMarkup("Analyzes content marketing factors using AI."),
+)]
 final class AIContentMarketingAuditAnalyzer extends AnalyzePluginBase implements BatchableAnalyzerInterface {
   /**
    * The AI provider manager.
@@ -817,7 +823,7 @@ EOT;
     // Replace multiple whitespace characters (spaces, tabs, newlines)
     // with a single space.
     $content = preg_replace('/\s+/', ' ', $content);
-    $content = trim($content);
+    $content = trim($content, " \n\r\t\v\0");
 
     return $content;
   }
